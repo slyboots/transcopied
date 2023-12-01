@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1D8346862B1415AB004ACF46 /* CopiedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D8346852B1415AB004ACF46 /* CopiedItem.swift */; };
+		1DD331C72B19670A00708F46 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 1DD331C62B19670A00708F46 /* .swiftlint.yml */; };
 		1DF36DD72B16EDC80037FA6A /* CopiedEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DF36DD62B16EDC80037FA6A /* CopiedEditorView.swift */; };
 		1DF36DDB2B1823740037FA6A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1DFE67922B13168E000E36DA /* Assets.xcassets */; };
 		1DFE678D2B13168D000E36DA /* Transcopied.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DFE678C2B13168D000E36DA /* Transcopied.swift */; };
@@ -21,6 +22,7 @@
 		1DD331BC2B1828CE00708F46 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		1DD331BD2B1828CE00708F46 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		1DD331BE2B1828CE00708F46 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		1DD331C62B19670A00708F46 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		1DF36DD62B16EDC80037FA6A /* CopiedEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopiedEditorView.swift; sourceTree = "<group>"; };
 		1DF36DD82B17881E0037FA6A /* Transcopied-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Transcopied-Info.plist"; sourceTree = "<group>"; };
 		1DF36DD92B17899F0037FA6A /* TranscopiedRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TranscopiedRelease.entitlements; sourceTree = "<group>"; };
@@ -46,6 +48,7 @@
 		1DD331BA2B1828CE00708F46 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1DD331C62B19670A00708F46 /* .swiftlint.yml */,
 				1DD331BC2B1828CE00708F46 /* CloudKit.framework */,
 				1DD331BD2B1828CE00708F46 /* CoreFoundation.framework */,
 				1DD331BB2B1828CE00708F46 /* SwiftData.framework */,
@@ -102,6 +105,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1DFE67992B13168E000E36DA /* Build configuration list for PBXNativeTarget "Transcopied" */;
 			buildPhases = (
+				1DD331C52B194D4F00708F46 /* ShellScript */,
 				1DFE67852B13168D000E36DA /* Sources */,
 				1DFE67862B13168D000E36DA /* Frameworks */,
 				1DFE67872B13168D000E36DA /* Resources */,
@@ -153,12 +157,34 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1DD331C72B19670A00708F46 /* .swiftlint.yml in Resources */,
 				1DF36DDB2B1823740037FA6A /* Assets.xcassets in Resources */,
 				1DFE67962B13168E000E36DA /* Preview Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1DD331C52B194D4F00708F46 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif [[ \"$(uname -m)\" == arm64 ]]; then\n    export PATH=\"/opt/homebrew/bin:$PATH\"\nfi\n\nif which swiftlint >/dev/null; then\n    swiftlint;\nelse\n    echo \"Warning swiftlint not installed! See https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		1DFE67852B13168D000E36DA /* Sources */ = {
@@ -213,7 +239,7 @@
 				DEVELOPMENT_TEAM = V6MX2ZRT2L;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -279,7 +305,7 @@
 				DEVELOPMENT_TEAM = V6MX2ZRT2L;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;

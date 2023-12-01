@@ -30,7 +30,11 @@ struct CopiedEditorView: View {
                     Text("\(item.content.count) characters")
             }.frame(maxWidth: .infinity, alignment: .leading).foregroundStyle(.secondary).font(.caption2)
             TextEditor(text: $item.content)
-                .frame(maxWidth: /*@START_MENU_TOKEN@*/ .infinity/*@END_MENU_TOKEN@*/, maxHeight: .infinity, alignment: .topLeading)
+                .frame(
+                    maxWidth: /*@START_MENU_TOKEN@*/ .infinity/*@END_MENU_TOKEN@*/,
+                    maxHeight: .infinity,
+                    alignment: .topLeading
+                )
                 .padding(.top).foregroundStyle(.primary)
                 .focused($editorFocused)
                 .onChange(of: editorFocused) {
@@ -79,24 +83,24 @@ struct CopiedEditorView: View {
     }
 
     private func setClipboard() {
-        return UIPasteboard.general.setValue(item.content, forPasteboardType: UTType.plainText.identifier)
+        UIPasteboard.general.setValue(item.content, forPasteboardType: UTType.plainText.identifier)
     }
 
     private func randomAlphanumericString(_ length: Int) -> String {
         let aln = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-        return (0 ..< length).map {
-            _ in String(aln.randomElement()!)
+        return (0 ..< length).map { _ in
+            String(aln.randomElement()!)
         }.reduce("", +)
     }
 
-    private func relativeDateFmt(_ d: Date) -> String {
-        let fmt: RelativeDateTimeFormatter = RelativeDateTimeFormatter()
+    private func relativeDateFmt(date: Date) -> String {
+        let fmt = RelativeDateTimeFormatter()
         fmt.unitsStyle = .abbreviated
-        return fmt.localizedString(fromTimeInterval: Date.now.distance(to: d))
+        return fmt.localizedString(fromTimeInterval: Date.now.distance(to: date))
     }
 }
 
 #Preview {
-    CopiedEditorView(item: CopiedItem(content: "Testing 123", timestamp: Date(), type: CopiedItemType.Text))
+    CopiedEditorView(item: CopiedItem(content: "Testing 123", timestamp: Date(), type: CopiedItemType.text))
         .modelContainer(for: CopiedItem.self, inMemory: true)
 }

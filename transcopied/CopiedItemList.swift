@@ -9,10 +9,10 @@ import SwiftUI
 
 struct CopiedItemRow: View {
     var item: CopiedItem
-    private func relativeDateFmt(_ d: Date) -> String {
-        let fmt: RelativeDateTimeFormatter = RelativeDateTimeFormatter()
+    private func relativeDateFmt(_ date: Date) -> String {
+        let fmt = RelativeDateTimeFormatter()
         fmt.unitsStyle = .abbreviated
-        return fmt.localizedString(fromTimeInterval: Date.now.distance(to: d))
+        return fmt.localizedString(fromTimeInterval: Date.now.distance(to: date))
     }
 
     var body: some View {
@@ -86,7 +86,7 @@ struct CopiedItemList: View {
 //                        Text("Clippings").font(.caption)
                     Spacer()
                     Image(systemName: "slider.horizontal.3").imageScale(.medium)
-                    .foregroundStyle(.primary)
+                        .foregroundStyle(.primary)
                 }
             }
         }
@@ -96,12 +96,9 @@ struct CopiedItemList: View {
         withAnimation {
             let content = getClipboard()
             if content != nil {
-                let newItem = CopiedItem(content: content!, timestamp: Date(), type: .Text)
+                let newItem = CopiedItem(content: content!, timestamp: Date(), type: .text)
                 modelContext.insert(newItem)
-            }
-            else {
-                
-            }
+            } else {}
         }
     }
 
@@ -124,15 +121,15 @@ struct CopiedItemList: View {
 
     private func randomAlphanumericString(_ length: Int) -> String {
         let aln = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-        return (0 ..< length).map {
-            _ in String(aln.randomElement()!)
+        return (0 ..< length).map { _ in
+            String(aln.randomElement()!)
         }.reduce("", +)
     }
 
-    private func relativeDateFmt(_ d: Date) -> String {
-        let fmt: RelativeDateTimeFormatter = RelativeDateTimeFormatter()
+    private func relativeDateFmt(_ date: Date) -> String {
+        let fmt = RelativeDateTimeFormatter()
         fmt.unitsStyle = .abbreviated
-        return fmt.localizedString(fromTimeInterval: Date.now.distance(to: d))
+        return fmt.localizedString(fromTimeInterval: Date.now.distance(to: date))
     }
 }
 

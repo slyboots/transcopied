@@ -5,8 +5,8 @@
 //  Created by Dakota Lorance on 11/26/23.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 @main
 struct Transcopied: App {

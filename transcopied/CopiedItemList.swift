@@ -13,23 +13,21 @@ struct ConditionalRowText: View {
     var def: String = "Tap to edit"
 
     var body: some View {
-        Text(calc(m: main, a: alt, d: def))
+        Text(calc(main: main, alt: alt, fallback: def))
     }
 
-    // swiftlint:disable identifier_name
-    func calc(m: String?, a: String?, d: String) -> String {
-        if m == nil, a == nil {
-            return d
+    func calc(main: String?, alt: String?, fallback: String) -> String {
+        if main == nil, alt == nil {
+            return fallback
         }
-        else if a != nil {
-            return m != nil ? String(m!.prefix(100)) : String(a!.prefix(100))
+        else if alt != nil {
+            return main != nil ? String(main!.prefix(100)) : String(alt!.prefix(100))
         }
         else {
             // main should be safe to use
-            return String(m!.prefix(100))
+            return String(main!.prefix(100))
         }
     }
-    // swiftlint:enable identifier_namecolumn    Int    1
 }
 
 struct CopiedItemRow: View {
@@ -100,20 +98,27 @@ struct CopiedItemList: View {
                 }
                 ToolbarItem {
                     Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
+                        Label("Add Clipping", systemImage: "plus")
                     }
                 }
             }
             .toolbar {
                 ToolbarItemGroup(placement: .bottomBar) {
-                    Button("New", systemImage: "square.and.arrow.down", action: addItem)
+                    Button("Paste", systemImage: "square.and.arrow.down", action: addItem)
+                        .accessibilityLabel("Add Clipping")
                     Spacer()
                     Spacer()
-                    Image(systemName: "slider.horizontal.3").imageScale(.medium)
+                    NavigationLink {
+                        AppDetails()
+                    } label: {
+                        Image(systemName: "slider.horizontal.3")
+                        .imageScale(.medium)
                         .foregroundStyle(.primary)
+                    }
                 }
             }
         }
+        .accessibilityAction(.magicTap, {addItem()})
     }
 
     private func addItem() {

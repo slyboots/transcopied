@@ -44,6 +44,7 @@ struct CopiedEditorView: View {
                     bottomBarPlacement = editorFocused ? .keyboard : .bottomBar
                 }
         }
+        .accessibilityAction(.magicTap, {setClipboard()})
         .navigationTitle("Edit")
         .padding(.horizontal)
         .toolbar {

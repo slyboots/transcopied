@@ -71,7 +71,7 @@ for_where:
   severity: warning
   allow_for_as_filter: false
 force_cast:
-  severity: error
+  severity: warning
 force_try:
   severity: error
 function_body_length:
@@ -193,7 +193,7 @@ shorthand_operator:
   severity: error
 statement_position:
   severity: warning
-  statement_mode: default
+  statement_mode: uncuddled_else
 superfluous_disable_command:
   severity: warning
 switch_case_alignment:
@@ -254,7 +254,7 @@ vertical_parameter_alignment:
   severity: warning
 vertical_whitespace:
   severity: warning
-  max_empty_lines: 1
+  max_empty_lines: 2
 void_function_in_ternary:
   severity: warning
 void_return:

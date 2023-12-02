@@ -13,34 +13,38 @@ struct CopiedEditorView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Environment(\.modelContext) private var modelContext
     @Bindable var item: CopiedItem
+    @State var title: String?
+
     @FocusState private var editorFocused: Bool
     @State private var bottomBarPlacement: ToolbarItemPlacement = .bottomBar
 
     var body: some View {
         VStack {
-            TextField(text: $item.title, label: {
-                EmptyView()
-            })
-            .font(.title2)
-            .frame(maxWidth: /*@START_MENU_TOKEN@*/ .infinity/*@END_MENU_TOKEN@*/)
+            TextField(text: Binding($item.title, nilAs: ""), label: { EmptyView() })
+                .font(.title2)
             Divider().padding(.vertical, 5).foregroundStyle(.primary)
             HStack {
                 Text(item.type.rawValue) +
                     Text(" - ") +
-                    Text("\(item.content.count) characters")
-            }.frame(maxWidth: .infinity, alignment: .leading).foregroundStyle(.secondary).font(.caption2)
-            TextEditor(text: $item.content)
+                    Text("\(item.content?.count ?? 0) characters")
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .foregroundStyle(.secondary)
+            .font(.caption2)
+
+            TextEditor(text: Binding($item.content, nilAs: ""))
                 .frame(
-                    maxWidth: /*@START_MENU_TOKEN@*/ .infinity/*@END_MENU_TOKEN@*/,
-                    maxHeight: .infinity,
-                    alignment: .topLeading
+                    //                    maxWidth: .infinity,
+                    maxHeight: .infinity
                 )
-                .padding(.top).foregroundStyle(.primary)
+//                .padding(.top)
+                .foregroundStyle(.primary)
                 .focused($editorFocused)
                 .onChange(of: editorFocused) {
                     bottomBarPlacement = editorFocused ? .keyboard : .bottomBar
                 }
         }
+        .navigationTitle("Edit")
         .padding(.horizontal)
         .toolbar {
             ToolbarItemGroup(placement: .keyboard) {
@@ -53,7 +57,7 @@ struct CopiedEditorView: View {
                     Button(role: .destructive, action: deleteItem, label: { Label("Delete", systemImage: "trash") })
                 }
                 label: {
-                    Button(role: .destructive, action: deleteItem, label: { Label("Delete", systemImage: "ellipsis") })
+                    Button(action: {}, label: { Label("More", systemImage: "ellipsis") })
                 }
             }
         }
@@ -68,9 +72,9 @@ struct CopiedEditorView: View {
                     Button(role: .destructive, action: deleteItem, label: { Label("Delete", systemImage: "trash") })
                 }
                 label: {
-                    Button(role: .destructive, action: deleteItem, label: { Label("More", systemImage: "ellipsis") })
+                    Button(action: {}, label: { Label("More", systemImage: "ellipsis") })
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+//                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
     }
@@ -83,24 +87,11 @@ struct CopiedEditorView: View {
     }
 
     private func setClipboard() {
-        UIPasteboard.general.setValue(item.content, forPasteboardType: UTType.plainText.identifier)
-    }
-
-    private func randomAlphanumericString(_ length: Int) -> String {
-        let aln = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-        return (0 ..< length).map { _ in
-            String(aln.randomElement()!)
-        }.reduce("", +)
-    }
-
-    private func relativeDateFmt(date: Date) -> String {
-        let fmt = RelativeDateTimeFormatter()
-        fmt.unitsStyle = .abbreviated
-        return fmt.localizedString(fromTimeInterval: Date.now.distance(to: date))
+        UIPasteboard.general.setValue(item.content as Any, forPasteboardType: UTType.plainText.identifier)
     }
 }
 
 #Preview {
-    CopiedEditorView(item: CopiedItem(content: "Testing 123", timestamp: Date(), type: CopiedItemType.text))
+    CopiedEditorView(item: CopiedItem(content: "Testing 123", title: "", timestamp: Date(), type: CopiedItemType.text))
         .modelContainer(for: CopiedItem.self, inMemory: true)
 }

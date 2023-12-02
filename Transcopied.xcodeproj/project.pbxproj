@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1D8346862B1415AB004ACF46 /* CopiedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D8346852B1415AB004ACF46 /* CopiedItem.swift */; };
 		1DD331C72B19670A00708F46 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 1DD331C62B19670A00708F46 /* .swiftlint.yml */; };
+		1DD331C92B19846400708F46 /* ModalMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DD331C82B19846400708F46 /* ModalMessage.swift */; };
 		1DF36DD72B16EDC80037FA6A /* CopiedEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DF36DD62B16EDC80037FA6A /* CopiedEditorView.swift */; };
 		1DF36DDB2B1823740037FA6A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1DFE67922B13168E000E36DA /* Assets.xcassets */; };
 		1DFE678D2B13168D000E36DA /* Transcopied.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DFE678C2B13168D000E36DA /* Transcopied.swift */; };
@@ -23,6 +24,7 @@
 		1DD331BD2B1828CE00708F46 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		1DD331BE2B1828CE00708F46 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		1DD331C62B19670A00708F46 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
+		1DD331C82B19846400708F46 /* ModalMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalMessage.swift; sourceTree = "<group>"; };
 		1DF36DD62B16EDC80037FA6A /* CopiedEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopiedEditorView.swift; sourceTree = "<group>"; };
 		1DF36DD82B17881E0037FA6A /* Transcopied-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Transcopied-Info.plist"; sourceTree = "<group>"; };
 		1DF36DD92B17899F0037FA6A /* TranscopiedRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TranscopiedRelease.entitlements; sourceTree = "<group>"; };
@@ -86,6 +88,7 @@
 				1DFE67922B13168E000E36DA /* Assets.xcassets */,
 				1DFE67942B13168E000E36DA /* Preview Content */,
 				1D8346852B1415AB004ACF46 /* CopiedItem.swift */,
+				1DD331C82B19846400708F46 /* ModalMessage.swift */,
 			);
 			path = transcopied;
 			sourceTree = "<group>";
@@ -193,6 +196,7 @@
 			files = (
 				1DFE678F2B13168D000E36DA /* CopiedItemList.swift in Sources */,
 				1DFE678D2B13168D000E36DA /* Transcopied.swift in Sources */,
+				1DD331C92B19846400708F46 /* ModalMessage.swift in Sources */,
 				1DF36DD72B16EDC80037FA6A /* CopiedEditorView.swift in Sources */,
 				1D8346862B1415AB004ACF46 /* CopiedItem.swift in Sources */,
 			);

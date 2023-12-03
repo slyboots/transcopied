@@ -112,13 +112,13 @@ struct CopiedItemList: View {
                         AppDetails()
                     } label: {
                         Image(systemName: "slider.horizontal.3")
-                        .imageScale(.medium)
-                        .foregroundStyle(.primary)
+                            .imageScale(.medium)
+                            .foregroundStyle(.primary)
                     }
                 }
             }
         }
-        .accessibilityAction(.magicTap, {addItem()})
+        .accessibilityAction(.magicTap) { addItem() }
     }
 
     private func addItem() {

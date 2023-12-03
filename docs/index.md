@@ -1,6 +1,6 @@
-<h1>Transcopied</h1>
-<i><b>Trans</b>form and copy data quickly between apps</i>
+# Transcopied
+_**Trans**form and copy data quickly between apps_
  
 
-<h1>Important Info</h1>
-<a href="./privacy.html">Transcopied's Privacy Policy</a>
+# Important Info
+- [Transcopied's Privacy Policy](./privacy.md)

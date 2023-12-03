@@ -3,4 +3,5 @@ _**Trans**form and copy data quickly between apps_
  
 
 # Important Info
-- [Transcopied's Privacy Policy](./privacy.md)
+- [Transcopied's Privacy Policy](.
+privacy.html)

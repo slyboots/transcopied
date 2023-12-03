@@ -17,6 +17,7 @@ struct CopiedEditorView: View {
 
     @FocusState private var editorFocused: Bool
     @State private var bottomBarPlacement: ToolbarItemPlacement = .bottomBar
+    @State private var copiedHapticTriggered: Bool = false
 
     var body: some View {
         VStack {
@@ -49,9 +50,13 @@ struct CopiedEditorView: View {
         .padding(.horizontal)
         .toolbar {
             ToolbarItemGroup(placement: .keyboard) {
-                Button(action: setClipboard) {
+                Button(action: {
+                    setClipboard()
+                    copiedHapticTriggered.toggle()
+                }, label: {
                     Label("Copy", systemImage: "square.and.arrow.down.on.square")
-                }
+                        .sensoryFeedback(.success, trigger: copiedHapticTriggered)
+                })
                 Spacer()
                 Spacer()
                 Menu {
@@ -64,9 +69,13 @@ struct CopiedEditorView: View {
         }
         .toolbar {
             ToolbarItemGroup(placement: .bottomBar) {
-                Button(action: setClipboard) {
+                Button(action: {
+                    setClipboard()
+                    copiedHapticTriggered.toggle()
+                }, label: {
                     Label("Copy", systemImage: "square.and.arrow.down.on.square")
-                }
+                        .sensoryFeedback(.success, trigger: copiedHapticTriggered)
+                })
                 Spacer()
                 Spacer()
                 Menu {
@@ -75,7 +84,7 @@ struct CopiedEditorView: View {
                 label: {
                     Button(action: {}, label: { Label("More", systemImage: "ellipsis") })
                 }
-//                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .frame(minWidth: 44.0, maxWidth: .infinity, maxHeight: .infinity)
             }
         }
     }
@@ -88,7 +97,9 @@ struct CopiedEditorView: View {
     }
 
     private func setClipboard() {
-        UIPasteboard.general.setValue(item.content as Any, forPasteboardType: UTType.plainText.identifier)
+        if item.content != nil {
+            UIPasteboard.general.setValue(item.content as Any, forPasteboardType: UTType.plainText.identifier)
+        }
     }
 }
 

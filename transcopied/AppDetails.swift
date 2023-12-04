@@ -10,27 +10,29 @@ import SwiftUI
 struct AppDetails: View {
     @AppStorage("support") private var support: URL = URL(string: "mailto:transcopied@dwl.dev")!
     @AppStorage("project") private var project: URL = URL(string: "https://github.com/slyboots/transcopied")!
+    @AppStorage("privacy") private var privacy: URL = URL(string: "https://transcopied.dwl.dev/privacy")!
 
     var body: some View {
-        ViewThatFits(in: .vertical) {
-            List {
-                Section(header: Text("About Transcopied").foregroundStyle(.accent).font(.subheadline), content: {
-
-                    Group {
-                        Link("Email Support", destination: support)
-                        .frame(maxWidth: /*@START_MENU_TOKEN@*/ .infinity/*@END_MENU_TOKEN@*/, alignment: .center)
-                    .foregroundStyle(.primary)
+        List {
+            Section(
+                header: Text("About Transcopied")
+                    .foregroundStyle(.accent)
+                    .font(.subheadline),
+                content: {
+                    Link(destination: support) {
+                        Text("Email Support")
                     }
-
-                    Link("Source Code", destination: project)
-                    .frame(maxWidth: /*@START_MENU_TOKEN@*/ .infinity/*@END_MENU_TOKEN@*/, alignment: .center)
-                    .foregroundStyle(.primary)
-                }
-                )
-            }
-            .padding()
+                    Link(destination: project) {
+                        Text("Source Code")
+                    }
+                    Link(destination: privacy) {
+                        Text("Privacy Policy")
+                    }
+                })
         }
+        .padding()
         .navigationTitle("Settings")
+        .foregroundStyle(.primary)
     }
 }
 

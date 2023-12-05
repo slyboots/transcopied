@@ -14,32 +14,33 @@ struct AppDetails: View {
 
     var body: some View {
         List {
-            Section(
-                header: Text("About Transcopied")
+            Section {
+                Link(destination: support) {
+                    Text("Email Support")
+                }
+                Link(destination: project) {
+                    Text("Source Code")
+                }
+                Link(destination: privacy) {
+                    Text("Privacy Policy")
+                }
+            } header: {
+                Text("About Transcopied")
                     .foregroundStyle(.accent)
-                    .font(.subheadline),
-                content: {
-                    Link(destination: support) {
-                        Text("Email Support")
-                    }
-                    Link(destination: project) {
-                        Text("Source Code")
-                    }
-                    Link(destination: privacy) {
-                        Text("Privacy Policy")
-                    }
-                })
-
+                    .font(.subheadline)
+            }
             Section {
                 Label {
-                    Text("Design/Icon")
-                    Text("Michelle Lorance")
-                } icon: {
-                    Image(systemName: "heart").foregroundStyle(.red)
-                }
-
+                    HStack {
+                        Text("❤️ Design/Icon:")
+                        Text("Michelle Lorance")
+                    }.font(.body)
+                } icon: {}
+            } header: {
+                Text("Credits")
+                    .foregroundStyle(.accent)
+                    .font(.subheadline)
             }
-            .listStyle(.plain)
         }
         .padding()
         .navigationTitle("Settings")

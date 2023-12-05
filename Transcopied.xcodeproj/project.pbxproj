@@ -9,9 +9,9 @@
 /* Begin PBXBuildFile section */
 		1D4BCFD72B1AD79C00E10186 /* AppDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D4BCFD62B1AD79C00E10186 /* AppDetails.swift */; };
 		1D8346862B1415AB004ACF46 /* CopiedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D8346852B1415AB004ACF46 /* CopiedItem.swift */; };
+		1DBC765B2B1F5FA6004B1261 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1DFE67922B13168E000E36DA /* Assets.xcassets */; };
 		1DD331C92B19846400708F46 /* ModalMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DD331C82B19846400708F46 /* ModalMessage.swift */; };
 		1DF36DD72B16EDC80037FA6A /* CopiedEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DF36DD62B16EDC80037FA6A /* CopiedEditorView.swift */; };
-		1DF36DDB2B1823740037FA6A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1DFE67922B13168E000E36DA /* Assets.xcassets */; };
 		1DFE678D2B13168D000E36DA /* Transcopied.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DFE678C2B13168D000E36DA /* Transcopied.swift */; };
 		1DFE678F2B13168D000E36DA /* CopiedItemList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DFE678E2B13168D000E36DA /* CopiedItemList.swift */; };
 		1DFE67962B13168E000E36DA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1DFE67952B13168E000E36DA /* Preview Assets.xcassets */; };
@@ -163,7 +163,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1DF36DDB2B1823740037FA6A /* Assets.xcassets in Resources */,
+				1DBC765B2B1F5FA6004B1261 /* Assets.xcassets in Resources */,
 				1DFE67962B13168E000E36DA /* Preview Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -344,7 +344,7 @@
 		1DFE679A2B13168E000E36DA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "\"AppIcon Dark Alt\" \"AppIcon Light Alt\" \"AppIcon Dark\"";
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "";
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon Light";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
@@ -382,7 +382,7 @@
 		1DFE679B2B13168E000E36DA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "\"AppIcon Dark Alt\" \"AppIcon Light Alt\" \"AppIcon Dark\"";
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "";
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon Light";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;

@@ -29,6 +29,17 @@ struct AppDetails: View {
                         Text("Privacy Policy")
                     }
                 })
+
+            Section {
+                Label {
+                    Text("Design/Icon")
+                    Text("Michelle Lorance")
+                } icon: {
+                    Image(systemName: "heart").foregroundStyle(.red)
+                }
+
+            }
+            .listStyle(.plain)
         }
         .padding()
         .navigationTitle("Settings")

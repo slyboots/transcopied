@@ -7,13 +7,31 @@
 import SwiftData
 import SwiftUI
 
-struct CopiedItemRow: View {
-    var item: CopiedItem
-    private func relativeDateFmt(_ d: Date) -> String {
-        let fmt: RelativeDateTimeFormatter = RelativeDateTimeFormatter()
-        fmt.unitsStyle = .abbreviated
-        return fmt.localizedString(fromTimeInterval: Date.now.distance(to: d))
+struct ConditionalRowText: View {
+    var main: String?
+    var alt: String?
+    var def: String = "Tap to edit"
+
+    var body: some View {
+        Text(calc(main: main, alt: alt, fallback: def))
     }
+
+    func calc(main: String?, alt: String?, fallback: String) -> String {
+        if main == nil, alt == nil {
+            return fallback
+        }
+        else if alt != nil {
+            return main != nil ? String(main!.prefix(100)) : String(alt!.prefix(100))
+        }
+        else {
+            // main should be safe to use
+            return String(main!.prefix(100))
+        }
+    }
+}
+
+struct CopiedItemRow: View {
+    @Bindable var item: CopiedItem
 
     var body: some View {
         HStack(alignment: .top) {
@@ -26,8 +44,7 @@ struct CopiedItemRow: View {
             .frame(maxHeight: .infinity, alignment: .center)
             VStack {
                 HStack {
-                    let rowtext = item.title == "Untitled" ? String(item.content.prefix(100)) : item.title
-                    Text(rowtext)
+                    ConditionalRowText(main: item.title, alt: item.content, def: "Empty Clipping! Tap to edit")
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                         .fixedSize(horizontal: false, vertical: true)
                         .lineLimit(8)
@@ -35,7 +52,7 @@ struct CopiedItemRow: View {
                 HStack {
                     Image(systemName: "info.circle")
                         .symbolRenderingMode(.monochrome)
-                    Text("\(item.content.count) characters")
+                    Text("\(item.content?.count ?? 0) characters")
                     Image(systemName: "clock")
                         .symbolRenderingMode(.monochrome)
                     Text(relativeDateFmt(item.timestamp))
@@ -49,6 +66,12 @@ struct CopiedItemRow: View {
         .padding(.leading)
         .frame(maxHeight: .infinity, alignment: .center)
     }
+
+    private func relativeDateFmt(_ date: Date) -> String {
+        let fmt = RelativeDateTimeFormatter()
+        fmt.unitsStyle = .abbreviated
+        return fmt.localizedString(fromTimeInterval: Date.now.distance(to: date))
+    }
 }
 
 struct CopiedItemList: View {
@@ -60,7 +83,7 @@ struct CopiedItemList: View {
             List {
                 ForEach(items) { item in
                     NavigationLink {
-                        CopiedEditorView(item: item)
+                        CopiedEditorView(item: item, title: item.title)
                     } label: {
                         CopiedItemRow(item: item)
                     }
@@ -75,33 +98,34 @@ struct CopiedItemList: View {
                 }
                 ToolbarItem {
                     Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
+                        Label("Add Clipping", systemImage: "plus")
                     }
                 }
             }
             .toolbar {
                 ToolbarItemGroup(placement: .bottomBar) {
-                    Button("New", systemImage: "square.and.arrow.down", action: addItem)
+                    Button("Paste", systemImage: "square.and.arrow.down", action: addItem)
+                        .accessibilityLabel("Add Clipping")
                     Spacer()
-//                        Text("Clippings").font(.caption)
                     Spacer()
-                    Image(systemName: "slider.horizontal.3").imageScale(.medium)
-                    .foregroundStyle(.primary)
+                    NavigationLink {
+                        AppDetails()
+                    } label: {
+                        Image(systemName: "slider.horizontal.3")
+                            .imageScale(.medium)
+                            .foregroundStyle(.primary)
+                    }
                 }
             }
         }
+        .accessibilityAction(.magicTap) { addItem() }
     }
 
     private func addItem() {
         withAnimation {
             let content = getClipboard()
-            if content != nil {
-                let newItem = CopiedItem(content: content!, timestamp: Date(), type: .Text)
-                modelContext.insert(newItem)
-            }
-            else {
-                
-            }
+            let newItem = CopiedItem(content: content, title: nil, timestamp: Date(), type: .text)
+            modelContext.insert(newItem)
         }
     }
 
@@ -115,24 +139,8 @@ struct CopiedItemList: View {
 
     private func getClipboard() -> String? {
         let pasteboard = UIPasteboard.general
-        if let data = pasteboard.string {
-            return data
-        }
-//        return randomAlphanumericString(6)
-        return nil
-    }
-
-    private func randomAlphanumericString(_ length: Int) -> String {
-        let aln = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-        return (0 ..< length).map {
-            _ in String(aln.randomElement()!)
-        }.reduce("", +)
-    }
-
-    private func relativeDateFmt(_ d: Date) -> String {
-        let fmt: RelativeDateTimeFormatter = RelativeDateTimeFormatter()
-        fmt.unitsStyle = .abbreviated
-        return fmt.localizedString(fromTimeInterval: Date.now.distance(to: d))
+        let data = pasteboard.string
+        return data
     }
 }
 

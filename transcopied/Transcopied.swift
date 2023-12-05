@@ -5,8 +5,8 @@
 //  Created by Dakota Lorance on 11/26/23.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 @main
 struct Transcopied: App {
@@ -14,11 +14,16 @@ struct Transcopied: App {
         let schema = Schema([
             CopiedItem.self,
         ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-
+        let modelConfiguration = ModelConfiguration(
+            schema: schema,
+            isStoredInMemoryOnly: false,
+            allowsSave: true,
+            cloudKitDatabase: ModelConfiguration.CloudKitDatabase.private("iCloud.Transcopied")
+        )
         do {
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
+        }
+        catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()

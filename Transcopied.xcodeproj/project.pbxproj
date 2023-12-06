@@ -20,6 +20,7 @@
 /* Begin PBXFileReference section */
 		1D4BCFD62B1AD79C00E10186 /* AppDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDetails.swift; sourceTree = "<group>"; };
 		1D8346852B1415AB004ACF46 /* CopiedItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopiedItem.swift; sourceTree = "<group>"; };
+		1DBC765D2B20040B004B1261 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		1DD331BB2B1828CE00708F46 /* SwiftData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftData.framework; path = System/Library/Frameworks/SwiftData.framework; sourceTree = SDKROOT; };
 		1DD331BC2B1828CE00708F46 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		1DD331BD2B1828CE00708F46 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
@@ -66,6 +67,7 @@
 				1DF36DDA2B178A890037FA6A /* TranscopiedDebug.entitlements */,
 				1DF36DD92B17899F0037FA6A /* TranscopiedRelease.entitlements */,
 				1DF36DD82B17881E0037FA6A /* Transcopied-Info.plist */,
+				1DBC765D2B20040B004B1261 /* README.md */,
 				1DFE678B2B13168D000E36DA /* transcopied */,
 				1DFE678A2B13168D000E36DA /* Products */,
 				1DD331BA2B1828CE00708F46 /* Frameworks */,

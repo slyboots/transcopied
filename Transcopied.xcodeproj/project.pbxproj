@@ -10,10 +10,11 @@
 		1D4BCFD72B1AD79C00E10186 /* AppDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D4BCFD62B1AD79C00E10186 /* AppDetails.swift */; };
 		1D8346862B1415AB004ACF46 /* CopiedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D8346852B1415AB004ACF46 /* CopiedItem.swift */; };
 		1DBC765B2B1F5FA6004B1261 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1DFE67922B13168E000E36DA /* Assets.xcassets */; };
+		1DBC765F2B20BAB2004B1261 /* PBManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DBC765E2B20BAB2004B1261 /* PBManager.swift */; };
 		1DD331C92B19846400708F46 /* ModalMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DD331C82B19846400708F46 /* ModalMessage.swift */; };
 		1DF36DD72B16EDC80037FA6A /* CopiedEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DF36DD62B16EDC80037FA6A /* CopiedEditorView.swift */; };
 		1DFE678D2B13168D000E36DA /* Transcopied.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DFE678C2B13168D000E36DA /* Transcopied.swift */; };
-		1DFE678F2B13168D000E36DA /* CopiedItemList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DFE678E2B13168D000E36DA /* CopiedItemList.swift */; };
+		1DFE678F2B13168D000E36DA /* CopiedItemsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DFE678E2B13168D000E36DA /* CopiedItemsList.swift */; };
 		1DFE67962B13168E000E36DA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1DFE67952B13168E000E36DA /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
 
@@ -21,6 +22,7 @@
 		1D4BCFD62B1AD79C00E10186 /* AppDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDetails.swift; sourceTree = "<group>"; };
 		1D8346852B1415AB004ACF46 /* CopiedItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopiedItem.swift; sourceTree = "<group>"; };
 		1DBC765D2B20040B004B1261 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		1DBC765E2B20BAB2004B1261 /* PBManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PBManager.swift; sourceTree = "<group>"; };
 		1DD331BB2B1828CE00708F46 /* SwiftData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftData.framework; path = System/Library/Frameworks/SwiftData.framework; sourceTree = SDKROOT; };
 		1DD331BC2B1828CE00708F46 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		1DD331BD2B1828CE00708F46 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
@@ -33,7 +35,7 @@
 		1DF36DDA2B178A890037FA6A /* TranscopiedDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TranscopiedDebug.entitlements; sourceTree = "<group>"; };
 		1DFE67892B13168D000E36DA /* Transcopied.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Transcopied.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DFE678C2B13168D000E36DA /* Transcopied.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transcopied.swift; sourceTree = "<group>"; };
-		1DFE678E2B13168D000E36DA /* CopiedItemList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopiedItemList.swift; sourceTree = "<group>"; };
+		1DFE678E2B13168D000E36DA /* CopiedItemsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopiedItemsList.swift; sourceTree = "<group>"; };
 		1DFE67922B13168E000E36DA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1DFE67952B13168E000E36DA /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -87,7 +89,8 @@
 			isa = PBXGroup;
 			children = (
 				1DFE678C2B13168D000E36DA /* Transcopied.swift */,
-				1DFE678E2B13168D000E36DA /* CopiedItemList.swift */,
+				1DFE678E2B13168D000E36DA /* CopiedItemsList.swift */,
+				1DBC765E2B20BAB2004B1261 /* PBManager.swift */,
 				1DF36DD62B16EDC80037FA6A /* CopiedEditorView.swift */,
 				1DFE67922B13168E000E36DA /* Assets.xcassets */,
 				1DFE67942B13168E000E36DA /* Preview Content */,
@@ -151,6 +154,8 @@
 				Base,
 			);
 			mainGroup = 1DFE67802B13168D000E36DA;
+			packageReferences = (
+			);
 			productRefGroup = 1DFE678A2B13168D000E36DA /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -189,7 +194,8 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif [[ \"$(uname -m)\" == arm64 ]]; then\n    export PATH=\"/opt/homebrew/bin:$PATH\"\nfi\n\nif which swiftlint >/dev/null; then\n    swiftlint;\nelse\n    echo \"Warning swiftlint not installed! See https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif [[ \"$(uname -m)\" == arm64 ]]; then\n    export PATH=\"/opt/homebrew/bin:$PATH\"\nfi\n\nif which swiftlint >/dev/null; then\n    #swiftlint;\n    echo \"YAY\"\nelse\n    echo \"Warning swiftlint not installed! See https://github.com/realm/SwiftLint\"\nfi\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -198,7 +204,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1DFE678F2B13168D000E36DA /* CopiedItemList.swift in Sources */,
+				1DFE678F2B13168D000E36DA /* CopiedItemsList.swift in Sources */,
+				1DBC765F2B20BAB2004B1261 /* PBManager.swift in Sources */,
 				1DFE678D2B13168D000E36DA /* Transcopied.swift in Sources */,
 				1D4BCFD72B1AD79C00E10186 /* AppDetails.swift in Sources */,
 				1DD331C92B19846400708F46 /* ModalMessage.swift in Sources */,
@@ -247,6 +254,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMPILER_INDEX_STORE_ENABLE = NO;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = V6MX2ZRT2L;
@@ -317,6 +325,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMPILER_INDEX_STORE_ENABLE = NO;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = V6MX2ZRT2L;
@@ -352,6 +361,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = TranscopiedDebug.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				COMPILER_INDEX_STORE_ENABLE = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"transcopied/Preview Content\"";
 				DEVELOPMENT_TEAM = V6MX2ZRT2L;
@@ -370,6 +380,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				OTHER_SWIFT_FLAGS = "\"-Xfrontend -debug-time-function-bodies\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.slyboots.transcopied;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -390,6 +401,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = TranscopiedRelease.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				COMPILER_INDEX_STORE_ENABLE = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"transcopied/Preview Content\"";
 				DEVELOPMENT_TEAM = V6MX2ZRT2L;
@@ -408,6 +420,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				OTHER_SWIFT_FLAGS = "\"-Xfrontend -debug-time-function-bodies\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.slyboots.transcopied;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

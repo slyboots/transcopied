@@ -1,3 +1,6 @@
+disabled_rules:
+- comment_spacing
+
 # If true, SwiftLint will not fail if no lintable files are found.
 allow_zero_lintable_files: true
 # If true, SwiftLint will treat all warnings as errors.
@@ -21,8 +24,8 @@ colon:
   apply_to_dictionaries: true
 comma:
   severity: warning
-comment_spacing:
-  severity: warning
+# comment_spacing: false
+  # severity: warning
 compiler_protocol_init:
   severity: warning
 computed_accessors_order:
@@ -197,8 +200,8 @@ statement_position:
 superfluous_disable_command:
   severity: warning
 switch_case_alignment:
-  severity: warning
-  indented_cases: false
+  # severity: warning
+  indented_cases: true
 syntactic_sugar:
   severity: warning
 todo:

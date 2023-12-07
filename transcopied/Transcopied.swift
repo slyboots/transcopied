@@ -10,6 +10,8 @@ import SwiftUI
 
 @main
 struct Transcopied: App {
+    @State var copiedItemSearch: String = ""
+
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             CopiedItem.self,
@@ -30,7 +32,10 @@ struct Transcopied: App {
 
     var body: some Scene {
         WindowGroup {
-            CopiedItemList()
+            NavigationStack {
+                CopiedItemsList(searchText: copiedItemSearch)
+                    .searchable(text: $copiedItemSearch)
+            }
         }
         .modelContainer(sharedModelContainer)
     }

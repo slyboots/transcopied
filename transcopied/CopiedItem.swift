@@ -12,21 +12,74 @@ import SwiftUI
 enum CopiedItemType: String, Codable {
     case text = "TXT"
     case url = "URL"
+    case img = "IMG"
     case file = "FILE"
 }
+
+
+enum CopiedItemKindScope: CaseIterable {
+    case txt
+    case url
+    case img
+    case file
+    case all
+}
+
+struct CopiedItemSearchToken {
+    enum Kind: String, Identifiable, Hashable, CaseIterable {
+        case txt
+        case url
+        case img
+        case file
+        case all
+        var id: Self {self}
+    }
+
+    enum Scope: String, Identifiable, Hashable, CaseIterable {
+        case kind
+        var id: Self {self}
+    }
+    var kind: Kind = .all
+    var scope: Scope = .kind
+}
+
+//let copiedItemSearchTokens = [
+//    CopiedItemTypeToken("txt"),
+//    CopiedItemTypeToken("url"),
+//    CopiedItemTypeToken("url"),
+//    CopiedItemTypeToken("file"),
+//]
 
 @Model
 final class CopiedItem {
     var title: String?
     var content: String?
     var timestamp: Date = Date(timeIntervalSinceNow: TimeInterval(0))
-    var type: CopiedItemType = CopiedItemType.text
+    var type: String = CopiedItemType.text.rawValue
 
     init(content: String?, title: String?, timestamp: Date, type: CopiedItemType) {
         self.content = content
         self.timestamp = timestamp
-        self.type = type
+        self.type = type.rawValue
         self.title = title
+    }
+
+
+    static func predicate(searchText: String) -> Predicate<CopiedItem> {
+        return #Predicate {
+            if searchText.isEmpty {
+                return true
+            }
+            else if $0.title?.localizedStandardContains(searchText) == true {
+                return true
+            }
+            else if $0.content?.localizedStandardContains(searchText) == true {
+                return true
+            }
+            else {
+                return false
+            }
+        }
     }
 }
 

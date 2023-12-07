@@ -25,7 +25,7 @@ struct CopiedEditorView: View {
                 .font(.title2)
             Divider().padding(.vertical, 5).foregroundStyle(.primary)
             HStack {
-                Text(item.type.rawValue) +
+                Text(item.type) +
                     Text(" - ") +
                     Text("\(item.content?.count ?? 0) characters")
             }

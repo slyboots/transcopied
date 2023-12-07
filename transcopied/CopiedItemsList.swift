@@ -118,22 +118,17 @@ struct CopiedItemsList: View {
         }
     }
 
-    init(searchText: String) {
+    init(searchText: String, searchScope: String) {
+        let filter = #Predicate<CopiedItem> { item in
+                return searchText.isEmpty ? 
+                    (item.type.localizedStandardContains(searchScope) || searchScope == "") :
+                    ((item.type.localizedStandardContains(searchScope) || searchScope == "") &&
+                    ((item.title?.localizedStandardContains(searchText) ?? false) ||
+                    (item.content?.localizedStandardContains(searchText) ?? false))
+                )
+        }
         _items = Query(
-            filter: #Predicate {
-                if searchText.isEmpty {
-                    return true
-                }
-                else if $0.title?.localizedStandardContains(searchText) == true {
-                    return true
-                }
-                else if $0.content?.localizedStandardContains(searchText) == true {
-                    return true
-                }
-                else {
-                    return false
-                }
-            },
+            filter: filter,
             sort: \CopiedItem.timestamp,
             order: .reverse
         )
@@ -156,47 +151,27 @@ struct CopiedItemsList: View {
     }
 }
 
-class CopiedItemSearchModel: ObservableObject {
-    @Published var searchText: String = ""
-    @Published var searchScope: CopiedItemKindScope = .all
-    @Published var searchTokens: [CopiedItemSearchToken.Kind] = []
-}
-struct CopiedItemListContainer: View {
-    @EnvironmentObject private var model: CopiedItemSearchModel
+struct CopiedItemsListContainer: View {
     @State private var searchText: String = ""
-    @State private var searchTokens: [CopiedItemSearchToken.Kind] = []
-    @State private var searchScope: CopiedItemSearchToken.Scope = .kind
-
-    var suggestedTokens: [CopiedItemSearchToken.Kind] {
-        if searchText.starts(with: "#") {
-            return CopiedItemSearchToken.Kind.allCases
-        }
-        else {
-            return []
-        }
-    }
+    @State private var searchTokens = [CopiedItemSearchToken.Kind]()
+    @State private var searchScope: CopiedItemSearchToken.Kind = .all
 
     var body: some View {
-        CopiedItemsList(searchText: model.searchText)
-            .searchable(text: $model.searchText, tokens: $model.searchTokens) { token in
-                switch token {
-                    case CopiedItemSearchToken.Kind.txt: Text("Text")
-                    case CopiedItemSearchToken.Kind.url: Text("Url")
-                    case CopiedItemSearchToken.Kind.img: Text("Img")
-                    case CopiedItemSearchToken.Kind.file: Text("File")
-                    case CopiedItemSearchToken.Kind.all: Text("All")
-                }
+        CopiedItemsList(searchText: searchText, searchScope: searchScope.rawValue)
+            .searchable(text: $searchText)
+            .searchScopes($searchScope, activation: .onSearchPresentation) {
+                Text("Text").tag(CopiedItemSearchToken.Kind.txt)
+                Text("URL").tag(CopiedItemSearchToken.Kind.url)
+                Text("Image").tag(CopiedItemSearchToken.Kind.img)
+                Text("File").tag(CopiedItemSearchToken.Kind.file)
+                Text("All").tag(CopiedItemSearchToken.Kind.all)
             }
-            .searchScopes($searchScope, scopes: {
-                Text("Kind").tag(CopiedItemSearchToken.Scope.kind)
-            })
     }
 }
 
 #Preview {
     NavigationStack {
-        CopiedItemListContainer()
-//        CopiedItemsList(searchText: "")
+        CopiedItemsListContainer()
     }
     .modelContainer(for: CopiedItem.self, inMemory: true)
 }

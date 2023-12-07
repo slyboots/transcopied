@@ -29,13 +29,6 @@ struct CopiedItemSearchToken {
     var kind: Kind = .all
 }
 
-// let copiedItemSearchTokens = [
-//    CopiedItemTypeToken("txt"),
-//    CopiedItemTypeToken("url"),
-//    CopiedItemTypeToken("url"),
-//    CopiedItemTypeToken("file"),
-// ]
-
 @Model
 final class CopiedItem {
     var title: String?
@@ -48,16 +41,6 @@ final class CopiedItem {
         self.timestamp = timestamp
         self.type = type.rawValue
         self.title = title
-    }
-
-    static func predicate(searchText: String, searchScope: String) -> Predicate<CopiedItem> {
-        return #Predicate<CopiedItem> {
-            searchText.isEmpty
-                ? true
-            : searchScope.localizedStandardContains($0.type)
-                        ? ($0.title ?? ($0.content ?? "")).localizedStandardContains(searchText)
-                        : false
-        }
     }
 }
 

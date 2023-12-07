@@ -119,16 +119,16 @@ struct CopiedItemsList: View {
     }
 
     init(searchText: String, searchScope: String) {
-        _items = Query(
-            filter: #Predicate {
-                return searchText.isEmpty ? ($0.type.localizedStandardContains(searchScope) || searchScope == "") : (
-                    ($0.type.localizedStandardContains(searchScope) || searchScope == "")
-                    && (
-                        ($0.title?.localizedStandardContains(searchText) ?? false)
-                        || ($0.content?.localizedStandardContains(searchText) ?? false)
-                    )
+        let filter = #Predicate<CopiedItem> { item in
+                return searchText.isEmpty ? 
+                    (item.type.localizedStandardContains(searchScope) || searchScope == "") :
+                    ((item.type.localizedStandardContains(searchScope) || searchScope == "") &&
+                    ((item.title?.localizedStandardContains(searchText) ?? false) ||
+                    (item.content?.localizedStandardContains(searchText) ?? false))
                 )
-            },
+        }
+        _items = Query(
+            filter: filter,
             sort: \CopiedItem.timestamp,
             order: .reverse
         )
@@ -159,7 +159,7 @@ struct CopiedItemsListContainer: View {
     var body: some View {
         CopiedItemsList(searchText: searchText, searchScope: searchScope.rawValue)
             .searchable(text: $searchText)
-            .searchScopes($searchScope) {
+            .searchScopes($searchScope, activation: .onSearchPresentation) {
                 Text("Text").tag(CopiedItemSearchToken.Kind.txt)
                 Text("URL").tag(CopiedItemSearchToken.Kind.url)
                 Text("Image").tag(CopiedItemSearchToken.Kind.img)

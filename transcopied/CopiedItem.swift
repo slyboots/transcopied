@@ -16,39 +16,25 @@ enum CopiedItemType: String, Codable {
     case file = "FILE"
 }
 
-
-enum CopiedItemKindScope: CaseIterable {
-    case txt
-    case url
-    case img
-    case file
-    case all
-}
-
 struct CopiedItemSearchToken {
     enum Kind: String, Identifiable, Hashable, CaseIterable {
-        case txt
-        case url
-        case img
-        case file
-        case all
-        var id: Self {self}
+        case txt = "TXT"
+        case url = "URL"
+        case img = "IMG"
+        case file = "FILE"
+        case all = ""
+        var id: Self { self }
     }
 
-    enum Scope: String, Identifiable, Hashable, CaseIterable {
-        case kind
-        var id: Self {self}
-    }
     var kind: Kind = .all
-    var scope: Scope = .kind
 }
 
-//let copiedItemSearchTokens = [
+// let copiedItemSearchTokens = [
 //    CopiedItemTypeToken("txt"),
 //    CopiedItemTypeToken("url"),
 //    CopiedItemTypeToken("url"),
 //    CopiedItemTypeToken("file"),
-//]
+// ]
 
 @Model
 final class CopiedItem {
@@ -64,21 +50,13 @@ final class CopiedItem {
         self.title = title
     }
 
-
-    static func predicate(searchText: String) -> Predicate<CopiedItem> {
-        return #Predicate {
-            if searchText.isEmpty {
-                return true
-            }
-            else if $0.title?.localizedStandardContains(searchText) == true {
-                return true
-            }
-            else if $0.content?.localizedStandardContains(searchText) == true {
-                return true
-            }
-            else {
-                return false
-            }
+    static func predicate(searchText: String, searchScope: String) -> Predicate<CopiedItem> {
+        return #Predicate<CopiedItem> {
+            searchText.isEmpty
+                ? true
+            : searchScope.localizedStandardContains($0.type)
+                        ? ($0.title ?? ($0.content ?? "")).localizedStandardContains(searchText)
+                        : false
         }
     }
 }
@@ -96,8 +74,10 @@ public extension Binding {
     }
 
     init<T>(isNotNil source: Binding<T?>, defaultValue: T) where Value == Bool {
-        self.init(get: { source.wrappedValue != nil },
-                  set: { source.wrappedValue = $0 ? defaultValue : nil })
+        self.init(
+            get: { source.wrappedValue != nil },
+            set: { source.wrappedValue = $0 ? defaultValue : nil }
+        )
     }
 }
 
@@ -112,6 +92,7 @@ public extension Binding where Value: Equatable {
                 else {
                     source.wrappedValue = newValue
                 }
-            })
+            }
+        )
     }
 }

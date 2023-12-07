@@ -47,11 +47,9 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
-      showGraphicsOverview = "Yes"
-      logGraphicsOverview = "Yes"
       allowLocationSimulation = "YES"
       consoleMode = "0"
-      structuredConsoleMode = "1">
+      structuredConsoleMode = "2">
       <BuildableProductRunnable
          runnableDebuggingMode = "0">
          <BuildableReference

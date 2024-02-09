@@ -76,6 +76,7 @@ struct CopiedItemRow: View {
 
 struct CopiedItemsList: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(PBoardManager.self) private var pbm
     @Query private var items: [CopiedItem]
 
     var body: some View {
@@ -136,9 +137,12 @@ struct CopiedItemsList: View {
 
     private func addItem() {
         withAnimation {
-            let content = PBManager.getClipboard()
-            let newItem = CopiedItem(content: content, title: nil, timestamp: Date(), type: .text)
-            modelContext.insert(newItem)
+            let content = pbm.get()
+            if (content == nil) { return }
+            else {
+                let newItem = CopiedItem(content: content as! String, title: nil, timestamp: Date(), type: .text)
+                modelContext.insert(newItem)
+            }
         }
     }
 

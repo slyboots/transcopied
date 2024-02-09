@@ -10,6 +10,8 @@ import SwiftUI
 
 @main
 struct Transcopied: App {
+    @State private var pbm: PBoardManager = PBoardManager()
+
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             CopiedItem.self,
@@ -29,10 +31,12 @@ struct Transcopied: App {
     }()
 
     var body: some Scene {
-        WindowGroup {
+    WindowGroup {
             NavigationStack {
                 CopiedItemsListContainer()
+                    .onSceneActivate {pbm.get()}
             }
+            .environment(pbm)
         }
         .modelContainer(sharedModelContainer)
     }

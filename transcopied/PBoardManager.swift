@@ -12,10 +12,10 @@ import UniformTypeIdentifiers
 typealias UIPB = UIPasteboard
 
 private enum PasteType: String, CaseIterable {
-    case text = "public.text"
+    case text = "public.plain-text"
     case image = "public.image"
     case url = "public.url"
-    case file = "public.file"
+    case file = "public.file-url"
 }
 
 @Observable
@@ -24,22 +24,22 @@ final class PBoardManager {
     private var board: UIPasteboard = UIPasteboard.general
 
     private var _canCopy: Bool {
-        let inType = UIPB.general.types.first != nil ? UTType(UIPB.general.types.first!) : nil
-
-        if inType == nil {
+        if UIPB.general.numberOfItems < 1 {
             return false
         }
         else {
-            return inType!.isSubtype(of: UTType(PasteType.image.rawValue)!) ||
-            inType!.isSubtype(of: UTType(PasteType.file.rawValue)!) ||
-            inType!.isSubtype(of: UTType(PasteType.url.rawValue)!) ||
-            inType!.isSubtype(of: UTType(PasteType.text.rawValue)!)
+            return UIPB.general.contains(pasteboardTypes: [
+                PasteType.text.rawValue,
+                PasteType.image.rawValue,
+                PasteType.url.rawValue,
+                PasteType.file.rawValue,
+            ])
         }
     }
 
-    func get() -> Any? {
+    func get() -> [Any]? {
         if !_canCopy {
-            return nil
+            return []
         }
         if self.board.hasImages {
             return self.board.images

@@ -34,7 +34,8 @@ struct Transcopied: App {
     WindowGroup {
             NavigationStack {
                 CopiedItemsListContainer()
-                    .onSceneActivate {pbm.get()}
+                    .onSceneActivate {let _ = pbm.get()}
+                    .onAppear {let _ = pbm.get()}
             }
             .environment(pbm)
         }

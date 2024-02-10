@@ -36,8 +36,9 @@ final class CopiedItem {
     var timestamp: Date = Date(timeIntervalSinceNow: TimeInterval(0))
     var type: String = CopiedItemType.text.rawValue
 
-    init(content: String?, title: String?, timestamp: Date, type: CopiedItemType) {
-        self.content = content
+    init(content: Any?, title: String?, timestamp: Date, type: CopiedItemType) {
+        // Just forcing to string for now
+        self.content = content as? String
         self.timestamp = timestamp
         self.type = type.rawValue
         self.title = title

@@ -140,7 +140,7 @@ struct CopiedItemsList: View {
             let content = pbm.get()
             if (content == nil) { return }
             else {
-                let newItem = CopiedItem(content: content as! String, title: nil, timestamp: Date(), type: .text)
+                let newItem = CopiedItem(content: content?.first, title: nil, timestamp: Date(), type: .text)
                 modelContext.insert(newItem)
             }
         }
@@ -161,6 +161,13 @@ struct CopiedItemsListContainer: View {
     @State private var searchScope: CopiedItemSearchToken.Kind = .all
 
     var body: some View {
+        if #available(iOS 17.1, *) {
+        #if DEBUG
+            let _ = Self._logChanges()
+        #endif
+        } else {
+            // Fallback on earlier versions
+        }
         CopiedItemsList(searchText: searchText, searchScope: searchScope.rawValue)
             .searchable(text: $searchText)
             .searchScopes($searchScope, activation: .onSearchPresentation) {

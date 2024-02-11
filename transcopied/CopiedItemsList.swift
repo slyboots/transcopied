@@ -137,10 +137,10 @@ struct CopiedItemsList: View {
 
     private func addItem() {
         withAnimation {
-            let content = pbm.get()
+            let content = pbm.buffer
             if (content == nil) { return }
             else {
-                let newItem = CopiedItem(content: content?.first, title: nil, timestamp: Date(), type: .text)
+                let newItem = CopiedItem(content: content, title: nil, timestamp: Date(), type: .text)
                 modelContext.insert(newItem)
             }
         }
@@ -156,18 +156,13 @@ struct CopiedItemsList: View {
 }
 
 struct CopiedItemsListContainer: View {
+    @Environment(PBoardManager.self) private var pbm
+
     @State private var searchText: String = ""
     @State private var searchTokens = [CopiedItemSearchToken.Kind]()
     @State private var searchScope: CopiedItemSearchToken.Kind = .all
 
     var body: some View {
-        if #available(iOS 17.1, *) {
-        #if DEBUG
-            let _ = Self._logChanges()
-        #endif
-        } else {
-            // Fallback on earlier versions
-        }
         CopiedItemsList(searchText: searchText, searchScope: searchScope.rawValue)
             .searchable(text: $searchText)
             .searchScopes($searchScope, activation: .onSearchPresentation) {
@@ -177,6 +172,9 @@ struct CopiedItemsListContainer: View {
                 Text("File").tag(CopiedItemSearchToken.Kind.file)
                 Text("All").tag(CopiedItemSearchToken.Kind.all)
             }
+            .onAppear(perform: {
+                let _ = pbm.get()
+            })
     }
 }
 

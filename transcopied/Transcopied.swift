@@ -31,13 +31,11 @@ struct Transcopied: App {
     }()
 
     var body: some Scene {
-    WindowGroup {
+        WindowGroup {
             NavigationStack {
                 CopiedItemsListContainer()
-                    .onSceneActivate {let _ = pbm.get()}
-                    .onAppear {let _ = pbm.get()}
             }
-            .environment(pbm)
+            .pasteboardContext()
         }
         .modelContainer(sharedModelContainer)
     }

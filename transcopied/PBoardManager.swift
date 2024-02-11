@@ -5,6 +5,7 @@
 //  Created by Dakota Lorance on 12/6/23.
 //
 
+import Combine
 import Foundation
 import SwiftUI
 import UniformTypeIdentifiers
@@ -12,48 +13,67 @@ import UniformTypeIdentifiers
 typealias UIPB = UIPasteboard
 
 private enum PasteType: String, CaseIterable {
-    case text = "public.plain-text"
     case image = "public.image"
     case url = "public.url"
-    case file = "public.file-url"
+    case text = "public.plain-text"
+    case file = "public.content"
 }
 
 @Observable
 final class PBoardManager {
     var buffer: Any?
+    var changes: Int = 0
+
     private var board: UIPasteboard = UIPasteboard.general
 
     private var _canCopy: Bool {
-        if UIPB.general.numberOfItems < 1 {
-            return false
-        }
-        else {
-            return UIPB.general.contains(pasteboardTypes: [
-                PasteType.text.rawValue,
-                PasteType.image.rawValue,
-                PasteType.url.rawValue,
-                PasteType.file.rawValue,
-            ])
-        }
+        return board.numberOfItems > 0 && board.contains(
+            pasteboardTypes: PasteType.allCases.map(\.rawValue)
+        )
     }
 
-    func get() -> [Any]? {
+    func get() -> Any? {
         if !_canCopy {
-            return []
+            return nil
         }
-        if self.board.hasImages {
-            return self.board.images
-        }
-        else if self.board.hasURLs {
-            return self.board.urls
+
+        // nothing has been copied since last time
+        if board.changeCount == changes {
+            return buffer
         }
         else {
-            return self.board.strings
+            changes = board.changeCount
         }
+
+        var PT = PasteType.file.rawValue
+        var PV: Any?
+
+        if board.hasImages {
+            PT = PasteType.image.rawValue
+            PV = board.images?.first!
+        }
+        else if board.hasURLs {
+            PT = PasteType.url.rawValue
+            PV = board.urls?.first!
+        }
+        else if board.hasStrings {
+            PT = PasteType.text.rawValue
+            PV = board.string
+        }
+        else {
+            PT = PasteType.file.rawValue
+            PV = board.value(forPasteboardType: PT)
+        }
+
+        if PV != nil {
+            buffer = PV ?? nil
+        }
+
+        return buffer
     }
 
     func set(data: [String: Any]) {
-        UIPB.general.setItems([data])
+        board.setItems([data])
     }
 }
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1D17E8322B779DEC002FE8E7 /* Activitea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D17E8312B779DEC002FE8E7 /* Activitea.swift */; };
 		1D243AF82B7676AC002560F9 /* SwiftUIX in Frameworks */ = {isa = PBXBuildFile; productRef = 1D243AF72B7676AC002560F9 /* SwiftUIX */; };
 		1D4BCFD72B1AD79C00E10186 /* AppDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D4BCFD62B1AD79C00E10186 /* AppDetails.swift */; };
 		1D8346862B1415AB004ACF46 /* CopiedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D8346852B1415AB004ACF46 /* CopiedItem.swift */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1D17E8312B779DEC002FE8E7 /* Activitea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Activitea.swift; sourceTree = "<group>"; };
 		1D4BCFD62B1AD79C00E10186 /* AppDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDetails.swift; sourceTree = "<group>"; };
 		1D8346852B1415AB004ACF46 /* CopiedItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopiedItem.swift; sourceTree = "<group>"; };
 		1DBC765D2B20040B004B1261 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 				1D8346852B1415AB004ACF46 /* CopiedItem.swift */,
 				1DD331C82B19846400708F46 /* ModalMessage.swift */,
 				1D4BCFD62B1AD79C00E10186 /* AppDetails.swift */,
+				1D17E8312B779DEC002FE8E7 /* Activitea.swift */,
 			);
 			path = transcopied;
 			sourceTree = "<group>";
@@ -200,7 +203,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif [[ \"$(uname -m)\" == arm64 ]]; then\n    export PATH=\"/opt/homebrew/bin:$PATH\"\nfi\n\nif which swiftlint >/dev/null; then\n    #swiftlint;\n    echo \"YAY\"\nelse\n    echo \"Warning swiftlint not installed! See https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n#iif [[ \"$(uname -m)\" == arm64 ]]; then\n#    export PATH=\"/opt/homebrew/bin:$PATH\"\n#fi\n\n#if which swiftlint >/dev/null; then\n    #swiftlint;\n#    echo \"YAY\"\n#else\n#    echo \"Warning swiftlint not installed! See https://github.com/realm/SwiftLint\"\n#fi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -214,6 +217,7 @@
 				1DBC765F2B20BAB2004B1261 /* PBoardManager.swift in Sources */,
 				1DFE678D2B13168D000E36DA /* Transcopied.swift in Sources */,
 				1D4BCFD72B1AD79C00E10186 /* AppDetails.swift in Sources */,
+				1D17E8322B779DEC002FE8E7 /* Activitea.swift in Sources */,
 				1DD331C92B19846400708F46 /* ModalMessage.swift in Sources */,
 				1DF36DD72B16EDC80037FA6A /* CopiedEditorView.swift in Sources */,
 				1D8346862B1415AB004ACF46 /* CopiedItem.swift in Sources */,

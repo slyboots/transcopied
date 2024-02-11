@@ -33,12 +33,20 @@ struct CopiedItemSearchToken {
 final class CopiedItem {
     var title: String?
     var content: String?
+    var image: Data?
     var timestamp: Date = Date(timeIntervalSinceNow: TimeInterval(0))
     var type: String = CopiedItemType.text.rawValue
 
     init(content: Any?, title: String?, timestamp: Date, type: CopiedItemType) {
-        // Just forcing to string for now
-        self.content = content as? String
+        switch type {
+            case .img:
+                self.image = (content as! UIImage).pngData()
+            case .file:
+                // come back to this
+                _ = {}
+            default:
+                self.content = (content as! String)
+        }
         self.timestamp = timestamp
         self.type = type.rawValue
         self.title = title

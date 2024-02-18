@@ -10,9 +10,8 @@ import Foundation
 import SwiftUI
 import UniformTypeIdentifiers
 
-typealias UIPB = UIPasteboard
 
-private enum PasteType: String, CaseIterable {
+public enum PasteType: String, CaseIterable {
     case image = "public.image"
     case url = "public.url"
     case text = "public.plain-text"
@@ -20,37 +19,76 @@ private enum PasteType: String, CaseIterable {
 }
 
 @Observable
-final class PBoardManager {
-    var buffer: Any?
+class PBoardManager {
+    var currentBoard: Any?
+    var currentUTI: PasteType?
     var changes: Int = 0
-
     private var board: UIPasteboard = UIPasteboard.general
 
-    private var _canCopy: Bool {
-        return board.numberOfItems > 0 && board.contains(
+    var canCopy: Bool {
+        return board.numberOfItems > 0 && board.changeCount > changes && board.contains(
             pasteboardTypes: PasteType.allCases.map(\.rawValue)
         )
     }
 
+    func uti() -> PasteType? {
+        if board.numberOfItems == 0 {
+            return nil
+        }
+        if board.hasImages {
+            return PasteType.image
+        }
+        else if board.hasURLs {
+            return PasteType.url
+        }
+        else if board.hasStrings {
+            return PasteType.text
+        }
+        else {
+            return PasteType.file
+        }
+    }
+
+    func pt2ct(pt: PasteType) -> CopiedContentType? {
+        if pt == PasteType.image {
+            return CopiedContentType.image
+        }
+        else if (pt == PasteType.url) {
+            return CopiedContentType.url
+        }
+        else if pt == PasteType.text {
+            return CopiedContentType.text
+        }
+        else {
+            return CopiedContentType.file
+        }
+    }
+
+    func hashed(data: Any, type: PasteType) -> Int {
+        switch type {
+            case .image:
+                return ((data as? Data)?.base64EncodedString().hashValue)!
+            case .url:
+                return ((data as? URL)?.absoluteString.hashValue)!
+            case .text:
+                return (data as? String)!.hashValue
+            default:
+                return (data as? Data)!.hashValue
+        }
+    }
     func get() -> Any? {
-        if !_canCopy {
+        if !canCopy {
             return nil
         }
 
-        // nothing has been copied since last time
-        if board.changeCount == changes {
-            return buffer
-        }
-        else {
-            changes = board.changeCount
-        }
+        changes = board.changeCount
 
         var PT = PasteType.file.rawValue
         var PV: Any?
 
         if board.hasImages {
             PT = PasteType.image.rawValue
-            PV = board.images?.first!
+            PV = board.images?.first!.pngData()
         }
         else if board.hasURLs {
             PT = PasteType.url.rawValue
@@ -65,11 +103,11 @@ final class PBoardManager {
             PV = board.value(forPasteboardType: PT)
         }
 
-        if PV != nil {
-            buffer = PV ?? nil
-        }
+//        if PV != nil {
+//            buffer = PV ?? nil
+//        }
 
-        return buffer
+        return PV
     }
 
     func set(data: [String: Any]) {
@@ -98,12 +136,45 @@ private struct SceneActivationActionModifier: ViewModifier {
     }
 }
 
+private struct ClipboardHasContentModifier: ViewModifier {
+    let action: () -> Void
+
+    func body(content: Content) -> some View {
+        content
+            .onReceive(NotificationCenter.default.publisher(for:  UIPasteboard.changedNotification)) { _ in
+                action()
+            }
+    }
+}
+
 public extension View {
     func onSceneActivate(perform action: @escaping () -> Void) -> some View {
         modifier(SceneActivationActionModifier(action: action))
     }
 
+    func onPasteboardContent(perform action: @escaping () -> Void) -> some View {
+        modifier(ClipboardHasContentModifier(action: action))
+    }
+
     func pasteboardContext() -> some View {
         modifier(PasteboardContextModifier())
+    }
+}
+
+extension UIPasteboard {
+    var hasContent: Bool {
+        self.numberOfItems > 0 && self.contains(pasteboardTypes: PasteType.allCases.map(\.rawValue))
+    }
+    var hasContentPublisher: AnyPublisher<Bool, Never> {
+        return Just(hasContent)
+            .merge(
+                with: NotificationCenter.default
+                    .publisher(for: UIPasteboard.changedNotification, object: self)
+                    .map { _ in self.hasContent })
+//            .merge(
+//                with: NotificationCenter.default
+//                    .publisher(for: UIApplication.didBecomeActiveNotification, object: nil)
+//                    .map { _ in self.hasContent })
+            .eraseToAnyPublisher()
     }
 }

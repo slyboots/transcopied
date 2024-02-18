@@ -24,7 +24,7 @@ struct CopiedEditorView: View {
 
     var body: some View {
         VStack {
-            TextField(text: Binding($item.title, nilAs: ""), label: { EmptyView() })
+            TextField(text: $item.title, label: { EmptyView() })
                 .font(.title2)
                 .focused($editorFocused, equals: .title)
             Divider().padding(.vertical, 5).foregroundStyle(.primary)
@@ -36,7 +36,7 @@ struct CopiedEditorView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .foregroundStyle(.secondary)
             .font(.caption2)
-            TextEditor(text: Binding($item.content, nilAs: ""))
+            TextEditor(text: $item.content)
                 .frame(
                     maxHeight: .infinity
                 )
@@ -49,7 +49,7 @@ struct CopiedEditorView: View {
         .defaultFocus($editorFocused, EditorFocused.title)
         .onAppear(perform: {
             let _t = (item.title ?? "")
-            let _c = (item.content ?? "")
+            let _c = (item.content ?? Data("".utf8))
 
             if (!_c.isEmpty) {
                 editorFocused = .content
@@ -114,13 +114,13 @@ struct CopiedEditorView: View {
     }
 
     private func setClipboard() {
-        if item.content != nil {
-            UIPasteboard.general.setValue(item.content as Any, forPasteboardType: UTType.plainText.identifier)
+        if let _ = item.content {
+            UIPasteboard.general.setValue(item.content!, forPasteboardType: UTType.plainText.identifier)
         }
     }
 }
 
 #Preview {
-    CopiedEditorView(item: CopiedItem(content: "Testing 123", title: "", timestamp: Date(), type: CopiedItemType.text))
+    CopiedEditorView(item: CopiedItem(content: "Testing 123", type: CopiedContentType.text, title: "", timestamp: Date()))
         .modelContainer(for: CopiedItem.self, inMemory: true)
 }

@@ -91,6 +91,7 @@ struct CopiedItemsList: View {
             }
             .onDelete(perform: deleteItems)
         }
+//        .onAppear(perform: {self.addItem()})
         .navigationTitle("Clippings")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -124,8 +125,8 @@ struct CopiedItemsList: View {
                 return searchText.isEmpty ? 
                     (item.type.localizedStandardContains(searchScope) || searchScope == "") :
                     ((item.type.localizedStandardContains(searchScope) || searchScope == "") &&
-                    ((item.title?.localizedStandardContains(searchText) ?? false) ||
-                    (item.content?.localizedStandardContains(searchText) ?? false))
+                     ((item.title.localizedStandardContains(searchText) ?? false) ||
+                      (String(data:item.content, encoding: UTF8)?.localizedStandardContains(searchText) ?? false))
                 )
         }
         _items = Query(
@@ -137,12 +138,19 @@ struct CopiedItemsList: View {
 
     private func addItem() {
         withAnimation {
-            let content = pbm.buffer
+            let content = self.pbm.currentBoard
             if (content == nil) { return }
-            else {
-                let newItem = CopiedItem(content: content, title: nil, timestamp: Date(), type: .text)
-                modelContext.insert(newItem)
-            }
+
+            let pbtype = pbm.currentUTI
+            let uid = pbm.hashed(data: content!, type: pbtype!)
+
+            let newItem = CopiedItem(
+                content: content,
+                type: pbm.pt2ct(pt: pbtype!)!,
+                title: nil,
+                timestamp: Date()
+            )
+            modelContext.insert(newItem)
         }
     }
 
@@ -156,25 +164,20 @@ struct CopiedItemsList: View {
 }
 
 struct CopiedItemsListContainer: View {
-    @Environment(PBoardManager.self) private var pbm
-
     @State private var searchText: String = ""
     @State private var searchTokens = [CopiedItemSearchToken.Kind]()
-    @State private var searchScope: CopiedItemSearchToken.Kind = .all
+    @State private var searchScope: CopiedItemSearchToken.Kind = .any
 
     var body: some View {
         CopiedItemsList(searchText: searchText, searchScope: searchScope.rawValue)
             .searchable(text: $searchText)
             .searchScopes($searchScope, activation: .onSearchPresentation) {
-                Text("Text").tag(CopiedItemSearchToken.Kind.txt)
+                Text("Text").tag(CopiedItemSearchToken.Kind.text)
                 Text("URL").tag(CopiedItemSearchToken.Kind.url)
-                Text("Image").tag(CopiedItemSearchToken.Kind.img)
+                Text("Image").tag(CopiedItemSearchToken.Kind.image)
                 Text("File").tag(CopiedItemSearchToken.Kind.file)
-                Text("All").tag(CopiedItemSearchToken.Kind.all)
+                Text("All").tag(CopiedItemSearchToken.Kind.any)
             }
-            .onAppear(perform: {
-                let _ = pbm.get()
-            })
     }
 }
 

@@ -11,6 +11,8 @@ import SwiftUI
 @main
 struct Transcopied: App {
     @State private var pbm: PBoardManager = PBoardManager()
+    @State private var currentBoard: Any? = nil
+    @State private var currentUTI: String? = nil
 
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
@@ -35,7 +37,16 @@ struct Transcopied: App {
             NavigationStack {
                 CopiedItemsListContainer()
             }
-            .pasteboardContext()
+            .environment(self.pbm)
+            .onSceneActivate {
+                // whenever the list view is shown
+                // if we have new stuff in clip
+                if self.pbm.canCopy {
+                    // then save the data from the clipboard for use later
+                    self.pbm.currentBoard = self.pbm.get()
+                    self.pbm.currentUTI = self.pbm.uti()
+                }
+            }
         }
         .modelContainer(sharedModelContainer)
     }

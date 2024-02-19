@@ -10,13 +10,8 @@ import Foundation
 import SwiftData
 import SwiftUI
 
-extension CopiedContentType {
-    static subscript(index: String) -> CopiedContentType {
-        return CopiedContentType(rawValue: index)!
-    }
-}
 
-enum CopiedContentType: String, Codable, Identifiable, CaseIterable, Hashable {
+enum PasteboardContentType: String, Codable, Identifiable, CaseIterable, Hashable {
     case text
     case url
     case image
@@ -25,67 +20,85 @@ enum CopiedContentType: String, Codable, Identifiable, CaseIterable, Hashable {
     var id: String { return "\(self)" }
 }
 
-class CopiedContentTypeTransformer: ValueTransformer {
-    override class func transformedValueClass() -> AnyClass {
-        return NSString.self
-    }
-
-    override class func allowsReverseTransformation() -> Bool {
-        return true
-    }
-
-    override func transformedValue(_ value: Any?) -> Any? {
-        let enumValue = value as? CopiedContentType
-        return enumValue?.rawValue
-    }
-
-    override func reverseTransformedValue(_ value: Any?) -> Any? {
-        guard let stringValue = value as? String else {
-            return nil
-        }
-        return CopiedContentType(rawValue: stringValue)
-    }
+enum CopiedContent {
+    case string(String)
+    case image(UIImage)
+    case file(Data)
+    case url(URL)
 }
-extension NSValueTransformerName {
-    static let copiedContentTypeTransformerName = NSValueTransformerName(rawValue: "CopiedContentTypeTransformer")
-}
-//ValueTransformer.setValueTransformer(CopiedContentTypeTransformer(), forName: .copiedContentTypeTransformerName)
-
-func clipboardHash(data: Data) -> String {
+func hashString(data: Data) -> String {
     return SHA256.hash(data: data).compactMap { String(format: "%02x", $0) }.joined()
 }
-
-struct CopiedItemSearchToken {
-    typealias Kind = CopiedContentType
-    var kind: CopiedContentType = .any
+enum CopiedItemError: Error {
+    case alreadyExists
 }
 
 @Model
 final class CopiedItem {
-    @Attribute(.unique, originalName: "hash") var id: String
-    var title: String
-    var content: Data?
-    @Attribute(.transformable(by: CopiedContentTypeTransformer)) var type: String = "\(CopiedContentType.text)"
-    var timestamp: Date = Date(timeIntervalSinceNow: TimeInterval(0))
+    var uid: String?
+    var title: String = ""
+    @Attribute(.externalStorage) var content: Data = Data()
+    var text: String?
+    @Transient var url: URL? {
+        return self.type == PasteboardContentType.url.rawValue ? URL(string: String(data: self.content, encoding: .utf8)!) : nil
+    }
+    @Transient var file: Data? {
+        return self.type == PasteboardContentType.file.rawValue ? self.content : nil
+    }
+    @Transient var image: UIImage? {
+        return self.type == PasteboardContentType.image.rawValue ? UIImage(data: self.content) : nil
+    }
 
-    init(content: Any?, type: CopiedContentType, title: String, timestamp: Date) {
-        self.type = type.rawValue
-        switch type {
-            case .image:
-                self.content = (content as! UIImage).pngData()!
-            case .url:
-                self.content = Data((content as! NSURL).absoluteString!.utf8)
-            case .text:
-                self.content = Data((content as! String).utf8)
-            case .file:
-                self.content = Data(content as! Data)
-            default:
-                self.content = Data(content as! Data)
+    var type: String = PasteboardContentType.any.rawValue
+    var timestamp: Date?
+
+    init(content: CopiedContent, type: PasteboardContentType, title: String = "", timestamp: Date?) {
+        switch content {
+            case let .image(I):
+                self.uid = hashString(data: I.pngData()!)
+                self.type = PasteboardContentType.image.rawValue
+                self.content = I.pngData()!
+            case let .file(D):
+                self.uid = hashString(data: D)
+                self.type = PasteboardContentType.file.rawValue
+                self.content = Data(D)
+            case let .string(S):
+                self.uid = hashString(data: Data(S.utf8))
+                self.type = PasteboardContentType.text.rawValue
+                self.content = Data(S.utf8)
+            case let .url(U):
+                self.uid = hashString(data: Data(U.absoluteString.utf8))
+                self.type = PasteboardContentType.url.rawValue
+                self.content = Data(U.absoluteString.utf8)
         }
-        self.timestamp = timestamp
-        self.type = type.rawValue
+        self.timestamp = timestamp ?? Date(timeIntervalSinceNow: TimeInterval(0))
         self.title = title
-        self.id = clipboardHash(data: self.content ?? Data())
+    }
+
+    // exists function to check if title already exist or not
+    private func exists(context: ModelContext, uid: String) -> Bool {
+
+        let predicate = #Predicate<CopiedItem> { $0.uid == uid }
+        let descriptor = FetchDescriptor(predicate: predicate)
+
+        do {
+            let result = try context.fetch(descriptor)
+            return !result.isEmpty ? true: false
+        } catch {
+            return false
+        }
+    }
+
+    func save(context: ModelContext) throws {
+
+        // find if the budget category with the same name already exists
+        if !exists(context: context, uid: self.uid!) {
+            // save it
+            context.insert(self)
+        } else {
+            // do something else
+            throw CopiedItemError.alreadyExists
+        }
     }
 }
 
@@ -100,6 +113,7 @@ public extension Binding {
             source.wrappedValue = $0
         })
     }
+    
 
     init<T>(isNotNil source: Binding<T?>, defaultValue: T) where Value == Bool {
         self.init(
@@ -107,6 +121,10 @@ public extension Binding {
             set: { source.wrappedValue = $0 ? defaultValue : nil }
         )
     }
+
+//    init<T>(isNotNil source: Binding<T>, defaultValue: T) where Value == Data {
+//        self.init
+//    }
 }
 
 public extension Binding where Value: Equatable {
@@ -123,4 +141,18 @@ public extension Binding where Value: Equatable {
             }
         )
     }
+}
+
+
+#Preview {
+    Group {
+        @Bindable var item: CopiedItem = CopiedItem(content: .string("Test Content"), type: .text, title: "Test Title", timestamp: Date.init(timeIntervalSinceNow: 0))
+        VStack {
+            Text(item.title)
+            Text(item.type)
+            Text(String(data: item.content, encoding: .utf8)!)
+            Text(item.timestamp!.ISO8601Format())
+        }
+    }
+    .modelContainer(for: CopiedItem.self, inMemory: true, isAutosaveEnabled: true)
 }

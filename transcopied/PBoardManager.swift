@@ -49,18 +49,18 @@ class PBoardManager {
         }
     }
 
-    func pt2ct(pt: PasteType) -> CopiedContentType? {
+    func pt2ct(pt: PasteType) -> PasteboardContentType? {
         if pt == PasteType.image {
-            return CopiedContentType.image
+            return PasteboardContentType.image
         }
         else if (pt == PasteType.url) {
-            return CopiedContentType.url
+            return PasteboardContentType.url
         }
         else if pt == PasteType.text {
-            return CopiedContentType.text
+            return PasteboardContentType.text
         }
         else {
-            return CopiedContentType.file
+            return PasteboardContentType.file
         }
     }
 

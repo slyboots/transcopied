@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ConditionalRowText: View {
     var main: String?
-    var alt: String?
+    var alt: String? = ""
     var def: String = "Tap to edit"
 
     var body: some View {
@@ -44,7 +44,7 @@ struct CopiedItemRow: View {
             .frame(maxHeight: .infinity, alignment: .center)
             VStack {
                 HStack {
-                    ConditionalRowText(main: item.title, alt: item.content, def: "Empty Clipping! Tap to edit")
+                    ConditionalRowText(main: item.title, alt: item.text, def: "Empty Clipping! Tap to edit")
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                         .fixedSize(horizontal: false, vertical: true)
                         .lineLimit(8)
@@ -52,10 +52,10 @@ struct CopiedItemRow: View {
                 HStack {
                     Image(systemName: "info.circle")
                         .symbolRenderingMode(.monochrome)
-                    Text("\(item.content?.count ?? 0) characters")
+                    Text("\(item.text?.count ?? 0 ) characters")
                     Image(systemName: "clock")
                         .symbolRenderingMode(.monochrome)
-                    Text(relativeDateFmt(item.timestamp))
+                    Text(relativeDateFmt(item.timestamp!))
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .font(.footnote)
@@ -122,12 +122,12 @@ struct CopiedItemsList: View {
 
     init(searchText: String, searchScope: String) {
         let filter = #Predicate<CopiedItem> { item in
-                return searchText.isEmpty ? 
-                    (item.type.localizedStandardContains(searchScope) || searchScope == "") :
-                    ((item.type.localizedStandardContains(searchScope) || searchScope == "") &&
-                     ((item.title.localizedStandardContains(searchText) ?? false) ||
-                      (String(data:item.content, encoding: UTF8)?.localizedStandardContains(searchText) ?? false))
-                )
+            return searchText.isEmpty ?
+            (item.type.localizedStandardContains(searchScope) || searchScope == "any") :
+            ((item.type.localizedStandardContains(searchScope) || searchScope == "any") &&
+             (item.title.localizedStandardContains(searchText) ||
+              (item.text?.localizedStandardContains(searchText) ?? false))
+            )
         }
         _items = Query(
             filter: filter,
@@ -142,12 +142,11 @@ struct CopiedItemsList: View {
             if (content == nil) { return }
 
             let pbtype = pbm.currentUTI
-            let uid = pbm.hashed(data: content!, type: pbtype!)
 
             let newItem = CopiedItem(
-                content: content,
+                content: .string(content as! String),
                 type: pbm.pt2ct(pt: pbtype!)!,
-                title: nil,
+                title: "",
                 timestamp: Date()
             )
             modelContext.insert(newItem)
@@ -165,18 +164,18 @@ struct CopiedItemsList: View {
 
 struct CopiedItemsListContainer: View {
     @State private var searchText: String = ""
-    @State private var searchTokens = [CopiedItemSearchToken.Kind]()
-    @State private var searchScope: CopiedItemSearchToken.Kind = .any
+    @State private var searchTokens = [PasteboardContentType]()
+    @State private var searchScope: PasteboardContentType = .any
 
     var body: some View {
         CopiedItemsList(searchText: searchText, searchScope: searchScope.rawValue)
             .searchable(text: $searchText)
             .searchScopes($searchScope, activation: .onSearchPresentation) {
-                Text("Text").tag(CopiedItemSearchToken.Kind.text)
-                Text("URL").tag(CopiedItemSearchToken.Kind.url)
-                Text("Image").tag(CopiedItemSearchToken.Kind.image)
-                Text("File").tag(CopiedItemSearchToken.Kind.file)
-                Text("All").tag(CopiedItemSearchToken.Kind.any)
+                Text("Text").tag(PasteboardContentType.text)
+                Text("URL").tag(PasteboardContentType.url)
+                Text("Image").tag(PasteboardContentType.image)
+                Text("File").tag(PasteboardContentType.file)
+                Text("All").tag(PasteboardContentType.any)
             }
     }
 }

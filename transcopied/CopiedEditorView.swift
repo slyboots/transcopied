@@ -31,12 +31,12 @@ struct CopiedEditorView: View {
             HStack {
                 Text(item.type) +
                     Text(" - ") +
-                    Text("\(item.content?.count ?? 0) characters")
+                Text("\(item.text?.count ?? 0) characters")
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .foregroundStyle(.secondary)
             .font(.caption2)
-            TextEditor(text: $item.content)
+            TextEditor(text: Binding($item.text, nilAs: ""))
                 .frame(
                     maxHeight: .infinity
                 )
@@ -48,8 +48,8 @@ struct CopiedEditorView: View {
         }
         .defaultFocus($editorFocused, EditorFocused.title)
         .onAppear(perform: {
-            let _t = (item.title ?? "")
-            let _c = (item.content ?? Data("".utf8))
+            let _t = (item.title )
+            let _c = (item.text ?? "")
 
             if (!_c.isEmpty) {
                 editorFocused = .content
@@ -114,13 +114,11 @@ struct CopiedEditorView: View {
     }
 
     private func setClipboard() {
-        if let _ = item.content {
-            UIPasteboard.general.setValue(item.content!, forPasteboardType: UTType.plainText.identifier)
-        }
+        UIPasteboard.general.setValue(item.content, forPasteboardType: UTType.plainText.identifier)
     }
 }
 
 #Preview {
-    CopiedEditorView(item: CopiedItem(content: "Testing 123", type: CopiedContentType.text, title: "", timestamp: Date()))
+    CopiedEditorView(item: CopiedItem(content: .string("Testing 123"), type: PasteboardContentType.text, title: "Preview Content", timestamp: Date()))
         .modelContainer(for: CopiedItem.self, inMemory: true)
 }

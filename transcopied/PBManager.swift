@@ -10,50 +10,50 @@ import Foundation
 import SwiftUI
 import UniformTypeIdentifiers
 
-
 public enum PasteType: String, CaseIterable {
     case image = "public.image"
     case url = "public.url"
     case text = "public.plain-text"
     case file = "public.content"
+    static subscript(index: String) -> PasteType? {
+        get {
+            return PasteType(rawValue: index) ?? PasteType.allCases.first(where: {"\($0)" == index })!
+        }
+    }
 }
 
 @Observable
-class PBoardManager {
-    var currentBoard: Any?
-    var currentUTI: PasteType?
+class PBManager {
+    var incomingBuffer: Any?
     var changes: Int = 0
     private var board: UIPasteboard = UIPasteboard.general
 
     var canCopy: Bool {
-        return board.numberOfItems > 0 && board.changeCount > changes && board.contains(
-            pasteboardTypes: PasteType.allCases.map(\.rawValue)
-        )
+        let types = PasteType.allCases.map(\.rawValue)
+        return board.contains(pasteboardTypes: types)
     }
 
-    func uti() -> PasteType? {
-        if board.numberOfItems == 0 {
-            return nil
-        }
+    var uti: String? {
         if board.hasImages {
-            return PasteType.image
+            return "public.image"
         }
-        else if board.hasURLs {
-            return PasteType.url
+        if board.hasURLs {
+            return "public.url"
         }
-        else if board.hasStrings {
-            return PasteType.text
+        if board.hasStrings {
+            return "public.plain-text"
         }
-        else {
-            return PasteType.file
+        if board.value(forPasteboardType: "public.content") != nil {
+            return "public.content"
         }
+        return nil
     }
 
     func pt2ct(pt: PasteType) -> PasteboardContentType? {
         if pt == PasteType.image {
             return PasteboardContentType.image
         }
-        else if (pt == PasteType.url) {
+        else if pt == PasteType.url {
             return PasteboardContentType.url
         }
         else if pt == PasteType.text {
@@ -76,38 +76,23 @@ class PBoardManager {
                 return (data as? Data)!.hashValue
         }
     }
+
     func get() -> Any? {
         if !canCopy {
             return nil
         }
 
         changes = board.changeCount
-
-        var PT = PasteType.file.rawValue
-        var PV: Any?
-
-        if board.hasImages {
-            PT = PasteType.image.rawValue
-            PV = board.images?.first!.pngData()
+        if let url = board.url {
+            return url
         }
-        else if board.hasURLs {
-            PT = PasteType.url.rawValue
-            PV = board.urls?.first!
+        if let image = board.image {
+            return image.pngData()
         }
-        else if board.hasStrings {
-            PT = PasteType.text.rawValue
-            PV = board.string
+        if let string = board.string {
+            return string
         }
-        else {
-            PT = PasteType.file.rawValue
-            PV = board.value(forPasteboardType: PT)
-        }
-
-//        if PV != nil {
-//            buffer = PV ?? nil
-//        }
-
-        return PV
+        return board.value(forPasteboardType: "public.content")
     }
 
     func set(data: [String: Any]) {
@@ -115,9 +100,46 @@ class PBoardManager {
     }
 }
 
+// class PasteboardManager {
+//    // Board references the system's general pasteboard
+//    private var board: UIPasteboard = UIPasteboard.general
+//
+//    // Property to check if the board can copy data
+//    var canCopy: Bool {
+//        let types: [String] = ["public.image", "public.url", "public.plain-text", "public.content"]
+//        guard !board.types.isEmpty else { return false }
+//        for type in types {
+//            if board.types.contains(type) { return true }
+//        }
+//        return false
+//    }
+//
+//    // Function to get the UTI of the pasteboard contents
+//    func uti() -> String? {
+//        if board.hasImages { return "public.image" }
+//        if board.hasURLs { return "public.url" }
+//        if board.hasStrings { return "public.plain-text" }
+//        if board.data(forPasteboardType: "public.content") != nil { return "public.content" }
+//        return nil
+//    }
+//
+//    // Function to retrieve data from the board
+//    func get() -> Any? {
+//        if let url = board.url { return url }
+//        if let image = board.image { return image.pngData() }
+//        if let string = board.string { return string }
+//        return board.data(forPasteboardType: "public.content")
+//    }
+//
+//    // Function to set data to the board
+//    func set(data: [String: Any]) {
+//        board.setItems([data], options: [:])
+//    }
+// }
+
 private struct PasteboardContextModifier: ViewModifier {
     func body(content: Content) -> some View {
-        @State var pbm = PBoardManager()
+        @State var pbm = PBManager()
         Group {
             content
                 .environment(pbm)
@@ -141,7 +163,7 @@ private struct ClipboardHasContentModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .onReceive(NotificationCenter.default.publisher(for:  UIPasteboard.changedNotification)) { _ in
+            .onReceive(NotificationCenter.default.publisher(for: UIPasteboard.changedNotification)) { _ in
                 action()
             }
     }
@@ -163,14 +185,16 @@ public extension View {
 
 extension UIPasteboard {
     var hasContent: Bool {
-        self.numberOfItems > 0 && self.contains(pasteboardTypes: PasteType.allCases.map(\.rawValue))
+        numberOfItems > 0 && contains(pasteboardTypes: PasteType.allCases.map(\.rawValue))
     }
+
     var hasContentPublisher: AnyPublisher<Bool, Never> {
         return Just(hasContent)
             .merge(
                 with: NotificationCenter.default
                     .publisher(for: UIPasteboard.changedNotification, object: self)
-                    .map { _ in self.hasContent })
+                    .map { _ in self.hasContent }
+            )
 //            .merge(
 //                with: NotificationCenter.default
 //                    .publisher(for: UIApplication.didBecomeActiveNotification, object: nil)

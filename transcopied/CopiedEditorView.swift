@@ -119,6 +119,6 @@ struct CopiedEditorView: View {
 }
 
 #Preview {
-    CopiedEditorView(item: CopiedItem(content: .string("Testing 123"), type: PasteboardContentType.text, title: "Preview Content", timestamp: Date()))
+    CopiedEditorView(item: CopiedItem(content: "Testing 123", type: PasteboardContentType.text, title: "Preview Content", timestamp: Date()))
         .modelContainer(for: CopiedItem.self, inMemory: true)
 }

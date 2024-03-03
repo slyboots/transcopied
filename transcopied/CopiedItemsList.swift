@@ -7,76 +7,10 @@
 import SwiftData
 import SwiftUI
 
-struct ConditionalRowText: View {
-    var main: String?
-    var alt: String? = ""
-    var def: String = "Tap to edit"
-
-    var body: some View {
-        Text(calc(main: main, alt: alt, fallback: def))
-    }
-
-    func calc(main: String?, alt: String?, fallback: String) -> String {
-        if main == nil, alt == nil {
-            return fallback
-        }
-        else if alt != nil {
-            return main != nil ? String(main!.prefix(100)) : String(alt!.prefix(100))
-        }
-        else {
-            // main should be safe to use
-            return String(main!.prefix(100))
-        }
-    }
-}
-
-struct CopiedItemRow: View {
-    @Bindable var item: CopiedItem
-
-    var body: some View {
-        HStack(alignment: .top) {
-            VStack {
-                Image(systemName: "text.alignleft")
-                    .imageScale(.large)
-                    .symbolRenderingMode(.monochrome)
-                    .foregroundColor(.secondary)
-            }
-            .frame(maxHeight: .infinity, alignment: .center)
-            VStack {
-                HStack {
-                    ConditionalRowText(main: item.title, alt: item.text, def: "Empty Clipping! Tap to edit")
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .lineLimit(8)
-                }
-                HStack {
-                    Image(systemName: "info.circle")
-                        .symbolRenderingMode(.monochrome)
-                    Text("\(item.text?.count ?? 0 ) characters")
-                    Image(systemName: "clock")
-                        .symbolRenderingMode(.monochrome)
-                    Text(relativeDateFmt(item.timestamp!))
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-            }
-            VStack {}
-        }
-        .padding(.leading)
-        .frame(maxHeight: .infinity, alignment: .center)
-    }
-
-    private func relativeDateFmt(_ date: Date) -> String {
-        let fmt = RelativeDateTimeFormatter()
-        fmt.unitsStyle = .abbreviated
-        return fmt.localizedString(fromTimeInterval: Date.now.distance(to: date))
-    }
-}
 
 struct CopiedItemsList: View {
     @Environment(\.modelContext) private var modelContext
-    @Environment(PBoardManager.self) private var pbm
+    @Environment(PBManager.self) private var pbm
     @Query private var items: [CopiedItem]
 
     var body: some View {
@@ -91,7 +25,7 @@ struct CopiedItemsList: View {
             }
             .onDelete(perform: deleteItems)
         }
-//        .onAppear(perform: {self.addItem()})
+        .onAppear(perform: {self.addItem()})
         .navigationTitle("Clippings")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -121,14 +55,27 @@ struct CopiedItemsList: View {
     }
 
     init(searchText: String, searchScope: String) {
+        let emptySearch = searchText.isEmpty
+        let anyScope = searchScope == ContentTypeFilter.any.rawValue
+        let noFilter = emptySearch && anyScope
         let filter = #Predicate<CopiedItem> { item in
-            return searchText.isEmpty ?
-            (item.type.localizedStandardContains(searchScope) || searchScope == "any") :
-            ((item.type.localizedStandardContains(searchScope) || searchScope == "any") &&
-             (item.title.localizedStandardContains(searchText) ||
-              (item.text?.localizedStandardContains(searchText) ?? false))
-            )
+            return noFilter ||
+                (anyScope || item.type.localizedStandardContains(searchScope)) &&
+                (emptySearch || (
+                    item.title.contains(searchText) ||
+                    item.content.contains(searchText.utf8)
+                ))
         }
+
+//        let filter = #Predicate<CopiedItem> { item in
+//            return searchText.isEmpty ?
+//            (item.type.localizedStandardContains(searchScope) || searchScope == "any") :
+//            ((item.type.localizedStandardContains(searchScope) || searchScope == "any") &&
+//             (item.title.contains(searchText) ||
+//              (item.content.contains(searchText.utf8) ?? false))
+//            )
+//        }
+
         _items = Query(
             filter: filter,
             sort: \CopiedItem.timestamp,
@@ -138,18 +85,23 @@ struct CopiedItemsList: View {
 
     private func addItem() {
         withAnimation {
-            let content = self.pbm.currentBoard
-            if (content == nil) { return }
+            let content = self.pbm.get()
+            guard !(content == nil) else { return }
 
-            let pbtype = pbm.currentUTI
-
+            let pbtype = self.pbm.uti
+            
             let newItem = CopiedItem(
-                content: .string(content as! String),
-                type: pbm.pt2ct(pt: pbtype!)!,
+                content: content!,
+                type: PasteboardContentType[pbtype!]!,
                 title: "",
                 timestamp: Date()
             )
-            modelContext.insert(newItem)
+            do {
+
+                try newItem.save(context: modelContext)
+            } catch _ {
+                return
+            }
         }
     }
 
@@ -161,21 +113,29 @@ struct CopiedItemsList: View {
         }
     }
 }
+enum ContentTypeFilter: String {
+    case text = "public.text"
+    case url = "public.url"
+    case image = "public.image"
+    case file = "public.content"
+    case any = ""
+    var id: String { return "\(self)" }
+}
 
 struct CopiedItemsListContainer: View {
     @State private var searchText: String = ""
     @State private var searchTokens = [PasteboardContentType]()
-    @State private var searchScope: PasteboardContentType = .any
+    @State private var searchScope: ContentTypeFilter = .any
 
     var body: some View {
         CopiedItemsList(searchText: searchText, searchScope: searchScope.rawValue)
             .searchable(text: $searchText)
             .searchScopes($searchScope, activation: .onSearchPresentation) {
-                Text("Text").tag(PasteboardContentType.text)
-                Text("URL").tag(PasteboardContentType.url)
-                Text("Image").tag(PasteboardContentType.image)
-                Text("File").tag(PasteboardContentType.file)
-                Text("All").tag(PasteboardContentType.any)
+                Text("Text").tag(ContentTypeFilter.text)
+                Text("URL").tag(ContentTypeFilter.url)
+                Text("Image").tag(ContentTypeFilter.image)
+                Text("File").tag(ContentTypeFilter.file)
+                Text("All").tag(ContentTypeFilter.any)
             }
     }
 }
@@ -184,5 +144,6 @@ struct CopiedItemsListContainer: View {
     NavigationStack {
         CopiedItemsListContainer()
     }
+    .pasteboardContext()
     .modelContainer(for: CopiedItem.self, inMemory: true)
 }

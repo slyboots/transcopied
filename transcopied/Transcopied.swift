@@ -10,9 +10,7 @@ import SwiftUI
 
 @main
 struct Transcopied: App {
-    @State private var pbm: PBoardManager = PBoardManager()
-    @State private var currentBoard: Any? = nil
-    @State private var currentUTI: String? = nil
+    @State private var pbm: PBManager = PBManager()
 
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
@@ -25,7 +23,11 @@ struct Transcopied: App {
             cloudKitDatabase: ModelConfiguration.CloudKitDatabase.private("iCloud.Transcopied")
         )
         do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            return try ModelContainer(
+                for: schema,
+                migrationPlan: CopiedItemsMigrationPlan.self,
+                configurations: [modelConfiguration]
+            )
         }
         catch {
             fatalError("Could not create ModelContainer: \(error)")
@@ -37,14 +39,14 @@ struct Transcopied: App {
             NavigationStack {
                 CopiedItemsListContainer()
             }
-            .environment(self.pbm)
+            .pasteboardContext()
+//            .environment(self.pbm)
             .onSceneActivate {
                 // whenever the list view is shown
                 // if we have new stuff in clip
                 if self.pbm.canCopy {
                     // then save the data from the clipboard for use later
-                    self.pbm.currentBoard = self.pbm.get()
-                    self.pbm.currentUTI = self.pbm.uti()
+                    self.pbm.incomingBuffer = self.pbm.get()
                 }
             }
         }

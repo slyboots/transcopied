@@ -8,6 +8,7 @@ import Foundation
 import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
+import SwiftUIX
 
 struct CopiedEditorView: View {
     enum EditorFocused {
@@ -16,7 +17,6 @@ struct CopiedEditorView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Environment(\.modelContext) private var modelContext
     @Bindable var item: CopiedItem
-    @State var title: String?
 
     @FocusState private var editorFocused: EditorFocused?
     @State private var bottomBarPlacement: ToolbarItemPlacement = .bottomBar
@@ -27,29 +27,52 @@ struct CopiedEditorView: View {
             TextField(text: $item.title, label: { EmptyView() })
                 .font(.title2)
                 .focused($editorFocused, equals: .title)
+                .padding(.top)
             Divider().padding(.vertical, 5).foregroundStyle(.primary)
-            HStack {
-                Text(item.type) +
-                    Text(" - ") +
-                Text("\(item.text?.count ?? 0) characters")
+
+            switch item.type {
+                case "public.plain-text":
+                    HStack {
+                        Text(item.type) +
+                        Text(" - ") +
+                        Text("\(item.text.count) characters")
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .foregroundStyle(.secondary)
+                    .font(.caption2)
+                    TextEditor(text: $item.text)
+                        .frame(
+                            maxHeight: .infinity
+                        )
+                        .foregroundStyle(.primary)
+                        .focused($editorFocused, equals: .content)
+                        .onChange(of: editorFocused) {
+                            bottomBarPlacement = editorFocused != nil ? .keyboard : .bottomBar
+                        }
+                case "public.url":
+                    VStack {
+                        LinkPresentationView(url: item.url)
+                            .maxHeight(50)
+                        TextEditor(text: $item.url.stringBinding)
+                            .padding()
+                            .foregroundStyle(.primary)
+                            .focused($editorFocused, equals: .content)
+                            .onChange(of: editorFocused) {
+                                bottomBarPlacement = editorFocused != nil ? .keyboard : .bottomBar
+                            }
+//                            .containerRelativeFrame(.horizontal, alignment: .top)
+                        Spacer()
+                    }
+
+                default:
+                    Spacer()
+                    EmptyView()
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .foregroundStyle(.secondary)
-            .font(.caption2)
-            TextEditor(text: Binding($item.text, nilAs: ""))
-                .frame(
-                    maxHeight: .infinity
-                )
-                .foregroundStyle(.primary)
-                .focused($editorFocused, equals: .content)
-                .onChange(of: editorFocused) {
-                    bottomBarPlacement = editorFocused != nil ? .keyboard : .bottomBar
-                }
         }
         .defaultFocus($editorFocused, EditorFocused.title)
         .onAppear(perform: {
             let _t = (item.title )
-            let _c = (item.text ?? "")
+            let _c = (item.text)
 
             if (!_c.isEmpty) {
                 editorFocused = .content
@@ -118,7 +141,63 @@ struct CopiedEditorView: View {
     }
 }
 
-#Preview {
-    CopiedEditorView(item: CopiedItem(content: "Testing 123", type: PasteboardContentType.text, title: "Preview Content", timestamp: Date()))
-        .modelContainer(for: CopiedItem.self, inMemory: true)
+#Preview("Text Clip") {
+    CopiedEditorView(
+        item: CopiedItem(
+            content: "Text Content",
+            type: PasteboardContentType.text,
+            title: "Test Title",
+            timestamp: Date()
+        )
+    )
+    .modelContainer(for: CopiedItem.self, inMemory: true)
+}
+
+#Preview("URL Clip with Title") {
+    CopiedEditorView(
+        item: CopiedItem(
+            content: URL(string: "https://www.reddit.com/")!,
+            type: PasteboardContentType.url,
+            title: "URL With Title",
+            timestamp: Date()
+        )
+    )
+    .modelContainer(for: CopiedItem.self, inMemory: true)
+}
+
+#Preview("URL Clip no Title") {
+    CopiedEditorView(
+        item: CopiedItem(
+            content: URL(string: "https://www.reddit.com/"),
+            type: PasteboardContentType.url,
+            title: "",
+            timestamp: Date()
+        )
+    )
+    .modelContainer(for: CopiedItem.self, inMemory: true)
+}
+
+
+#Preview("Image Clip with Title") {
+    CopiedEditorView(
+        item: CopiedItem(
+            content: "Testing 123",
+            type: PasteboardContentType.text,
+            title: "Preview Content",
+            timestamp: Date()
+        )
+    )
+    .modelContainer(for: CopiedItem.self, inMemory: true)
+}
+
+#Preview("Image Clip no Title") {
+    CopiedEditorView(
+        item: CopiedItem(
+            content: "Testing 123",
+            type: PasteboardContentType.text,
+            title: "Preview Content",
+            timestamp: Date()
+        )
+    )
+    .modelContainer(for: CopiedItem.self, inMemory: true)
 }

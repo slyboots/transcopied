@@ -8,7 +8,7 @@ import SwiftData
 import SwiftUI
 
 
-struct CopiedItemsList: View {
+struct CopiedItemList: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(PBManager.self) private var pbm
     @Query private var items: [CopiedItem]
@@ -17,7 +17,7 @@ struct CopiedItemsList: View {
         List {
             ForEach(items) { item in
                 NavigationLink {
-                    CopiedEditorView(item: item, title: item.title)
+                    CopiedEditorView(item: item)
                 } label: {
                     CopiedItemRow(item: item)
                 }
@@ -66,16 +66,6 @@ struct CopiedItemsList: View {
                     item.content.contains(searchText.utf8)
                 ))
         }
-
-//        let filter = #Predicate<CopiedItem> { item in
-//            return searchText.isEmpty ?
-//            (item.type.localizedStandardContains(searchScope) || searchScope == "any") :
-//            ((item.type.localizedStandardContains(searchScope) || searchScope == "any") &&
-//             (item.title.contains(searchText) ||
-//              (item.content.contains(searchText.utf8) ?? false))
-//            )
-//        }
-
         _items = Query(
             filter: filter,
             sort: \CopiedItem.timestamp,
@@ -122,13 +112,13 @@ enum ContentTypeFilter: String {
     var id: String { return "\(self)" }
 }
 
-struct CopiedItemsListContainer: View {
+struct CopiedItemListContainer: View {
     @State private var searchText: String = ""
     @State private var searchTokens = [PasteboardContentType]()
     @State private var searchScope: ContentTypeFilter = .any
 
     var body: some View {
-        CopiedItemsList(searchText: searchText, searchScope: searchScope.rawValue)
+        CopiedItemList(searchText: searchText, searchScope: searchScope.rawValue)
             .searchable(text: $searchText)
             .searchScopes($searchScope, activation: .onSearchPresentation) {
                 Text("Text").tag(ContentTypeFilter.text)
@@ -142,7 +132,7 @@ struct CopiedItemsListContainer: View {
 
 #Preview {
     NavigationStack {
-        CopiedItemsListContainer()
+        CopiedItemListContainer()
     }
     .pasteboardContext()
     .modelContainer(for: CopiedItem.self, inMemory: true)

@@ -49,55 +49,66 @@ final class CopiedItem {
     var content: Data = Data()
 
     @Transient
-    var text: String? {
-        get { return type == PasteboardContentType.text.rawValue ? String(data: content, encoding: .utf8) : nil }
+    var text: String {
+        get { return String(data: content, encoding: .utf8) ?? ""}
         set {
-            content = Data(newValue!.utf8)
+            content = Data(newValue.utf8)
         }
     }
 
     @Transient
-    var url: URL? {
-        return type == PasteboardContentType.url.rawValue ? URL(string: String(data: content, encoding: .utf8)!) : nil
+    var url: URL {
+        get { return URL(string: String(data: content, encoding: .utf8)!)!}
+//        get { return type == PasteboardContentType.url.rawValue ? URL(string: String(data: content, encoding: .utf8)!) : nil }
+        set {
+            content = Data(newValue.absoluteString.removingPercentEncoding!.utf8)
+        }
     }
 
     @Transient
     var file: Data? {
-        return type == PasteboardContentType.file.rawValue ? content : nil
+        get { return type == PasteboardContentType.file.rawValue ? content : nil}
+        set { content = Data(newValue!)}
     }
 
     @Transient
     var image: UIImage? {
-        return type == PasteboardContentType.image.rawValue ? UIImage(data: content) : nil
+        get {return type == PasteboardContentType.image.rawValue ? UIImage(data: content) : nil}
+        set {
+            content = Data(newValue!.pngData()!)
+        }
     }
 
-    init(content: Any, type: PasteboardContentType, title: String = "", timestamp: Date?) {
+    init(content: Any, type: PasteboardContentType, title: String = "", timestamp: Date? = nil) {
         switch type {
             case .image:
                 let I = (content as! UIImage)
                 self.uid = hashString(data: I.pngData()!)
                 self.type = PasteboardContentType.image.rawValue
                 self.content = I.pngData()!
-            case .file:
-                let D = (content as! Data)
-                self.uid = hashString(data: D)
-                self.type = PasteboardContentType.file.rawValue
-                self.content = Data(D)
-            case .text:
-                let S = (content as! String)
-                self.uid = hashString(data: Data(S.utf8))
-                self.type = PasteboardContentType.text.rawValue
-                self.content = Data(S.utf8)
+                self.title = title
             case .url:
                 let U = (content as! URL)
                 self.uid = hashString(data: Data(U.absoluteString.utf8))
                 self.type = PasteboardContentType.url.rawValue
                 self.content = Data(U.absoluteString.utf8)
+                self.title = title.isEmpty ? (U.host() ?? U.formatted(.url)) : title
+            case .text:
+                let S = (content as! String)
+                self.uid = hashString(data: Data(S.utf8))
+                self.type = PasteboardContentType.text.rawValue
+                self.content = Data(S.utf8)
+                self.title = title
+            case .file:
+                let D = (content as! Data)
+                self.uid = hashString(data: D)
+                self.type = PasteboardContentType.file.rawValue
+                self.content = Data(D)
+                self.title = title
         }
         if !self.content.isEmpty {
-            self.timestamp = timestamp ?? Date(timeIntervalSinceNow: TimeInterval(0))
+            self.timestamp = timestamp ?? Date(timeIntervalSinceNow: 0)
         }
-        self.title = title
     }
 
     // exists function to check if title already exist or not
@@ -126,6 +137,17 @@ final class CopiedItem {
         }
     }
 }
+
+public extension Binding where Value == URL {
+    var stringBinding: Binding<String> {
+        .init(get: {
+            self.wrappedValue.absoluteString.removingPercentEncoding!
+        }, set: {newValue in
+            self.wrappedValue = URL(string: newValue)!
+        })
+    }
+}
+
 
 public extension Binding {
     init(_ source: Binding<Value?>, _ defaultValue: Value) {

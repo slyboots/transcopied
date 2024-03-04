@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1D086B932B9461E8004939CD /* CopiedItemVersions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D086B922B9461E8004939CD /* CopiedItemVersions.swift */; };
 		1D086B972B9483F0004939CD /* CopiedItemListRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D086B962B9483F0004939CD /* CopiedItemListRow.swift */; };
+		1D086B992B95340F004939CD /* SwiftUIX in Frameworks */ = {isa = PBXBuildFile; productRef = 1D086B982B95340F004939CD /* SwiftUIX */; };
 		1D17E8322B779DEC002FE8E7 /* Activitea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D17E8312B779DEC002FE8E7 /* Activitea.swift */; };
 		1D4BCFD72B1AD79C00E10186 /* AppDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D4BCFD62B1AD79C00E10186 /* AppDetails.swift */; };
 		1D8346862B1415AB004ACF46 /* CopiedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D8346852B1415AB004ACF46 /* CopiedItem.swift */; };
@@ -17,7 +18,7 @@
 		1DD331C92B19846400708F46 /* ModalMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DD331C82B19846400708F46 /* ModalMessage.swift */; };
 		1DF36DD72B16EDC80037FA6A /* CopiedEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DF36DD62B16EDC80037FA6A /* CopiedEditorView.swift */; };
 		1DFE678D2B13168D000E36DA /* Transcopied.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DFE678C2B13168D000E36DA /* Transcopied.swift */; };
-		1DFE678F2B13168D000E36DA /* CopiedItemsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DFE678E2B13168D000E36DA /* CopiedItemsList.swift */; };
+		1DFE678F2B13168D000E36DA /* CopiedItemList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DFE678E2B13168D000E36DA /* CopiedItemList.swift */; };
 		1DFE67962B13168E000E36DA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1DFE67952B13168E000E36DA /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
 
@@ -41,7 +42,7 @@
 		1DF36DDA2B178A890037FA6A /* TranscopiedDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TranscopiedDebug.entitlements; sourceTree = "<group>"; };
 		1DFE67892B13168D000E36DA /* Transcopied.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Transcopied.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DFE678C2B13168D000E36DA /* Transcopied.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transcopied.swift; sourceTree = "<group>"; };
-		1DFE678E2B13168D000E36DA /* CopiedItemsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopiedItemsList.swift; sourceTree = "<group>"; };
+		1DFE678E2B13168D000E36DA /* CopiedItemList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopiedItemList.swift; sourceTree = "<group>"; };
 		1DFE67922B13168E000E36DA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1DFE67952B13168E000E36DA /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -51,6 +52,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1D086B992B95340F004939CD /* SwiftUIX in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -68,6 +70,7 @@
 		1D086B952B948394004939CD /* CopiedItemList */ = {
 			isa = PBXGroup;
 			children = (
+				1DFE678E2B13168D000E36DA /* CopiedItemList.swift */,
 				1D086B962B9483F0004939CD /* CopiedItemListRow.swift */,
 			);
 			path = CopiedItemList;
@@ -113,7 +116,6 @@
 				1D086B952B948394004939CD /* CopiedItemList */,
 				1D086B912B946169004939CD /* Migrations */,
 				1DFE678C2B13168D000E36DA /* Transcopied.swift */,
-				1DFE678E2B13168D000E36DA /* CopiedItemsList.swift */,
 				1DBC765E2B20BAB2004B1261 /* PBManager.swift */,
 				1DF36DD62B16EDC80037FA6A /* CopiedEditorView.swift */,
 				1DFE67922B13168E000E36DA /* Assets.xcassets */,
@@ -152,6 +154,7 @@
 			);
 			name = Transcopied;
 			packageProductDependencies = (
+				1D086B982B95340F004939CD /* SwiftUIX */,
 			);
 			productName = nipper;
 			productReference = 1DFE67892B13168D000E36DA /* Transcopied.app */;
@@ -232,7 +235,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1DFE678F2B13168D000E36DA /* CopiedItemsList.swift in Sources */,
+				1DFE678F2B13168D000E36DA /* CopiedItemList.swift in Sources */,
 				1D086B972B9483F0004939CD /* CopiedItemListRow.swift in Sources */,
 				1DBC765F2B20BAB2004B1261 /* PBManager.swift in Sources */,
 				1D086B932B9461E8004939CD /* CopiedItemVersions.swift in Sources */,
@@ -498,6 +501,14 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1D086B982B95340F004939CD /* SwiftUIX */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1D243AF62B7676AC002560F9 /* XCRemoteSwiftPackageReference "SwiftUIX" */;
+			productName = SwiftUIX;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 1DFE67812B13168D000E36DA /* Project object */;
 }

@@ -37,10 +37,9 @@ struct Transcopied: App {
     var body: some Scene {
         WindowGroup {
             NavigationStack {
-                CopiedItemsListContainer()
+                CopiedItemListContainer()
             }
             .pasteboardContext()
-//            .environment(self.pbm)
             .onSceneActivate {
                 // whenever the list view is shown
                 // if we have new stuff in clip

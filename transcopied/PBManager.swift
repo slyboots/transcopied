@@ -9,6 +9,8 @@ import Combine
 import Foundation
 import SwiftUI
 import UniformTypeIdentifiers
+import LinkPresentation
+import SwiftUIX
 
 public enum PasteType: String, CaseIterable {
     case image = "public.image"
@@ -41,27 +43,15 @@ class PBManager {
             return "public.url"
         }
         if board.hasStrings {
+            if board.string!.isURL() {
+                return "public.url"
+            }
             return "public.plain-text"
         }
         if board.value(forPasteboardType: "public.content") != nil {
             return "public.content"
         }
         return nil
-    }
-
-    func pt2ct(pt: PasteType) -> PasteboardContentType? {
-        if pt == PasteType.image {
-            return PasteboardContentType.image
-        }
-        else if pt == PasteType.url {
-            return PasteboardContentType.url
-        }
-        else if pt == PasteType.text {
-            return PasteboardContentType.text
-        }
-        else {
-            return PasteboardContentType.file
-        }
     }
 
     func hashed(data: Any, type: PasteType) -> Int {
@@ -90,6 +80,9 @@ class PBManager {
             return image.pngData()
         }
         if let string = board.string {
+            if string.isURL() {
+                return URL(string: string)
+            }
             return string
         }
         return board.value(forPasteboardType: "public.content")
@@ -100,42 +93,40 @@ class PBManager {
     }
 }
 
-// class PasteboardManager {
-//    // Board references the system's general pasteboard
-//    private var board: UIPasteboard = UIPasteboard.general
-//
-//    // Property to check if the board can copy data
-//    var canCopy: Bool {
-//        let types: [String] = ["public.image", "public.url", "public.plain-text", "public.content"]
-//        guard !board.types.isEmpty else { return false }
-//        for type in types {
-//            if board.types.contains(type) { return true }
-//        }
-//        return false
-//    }
-//
-//    // Function to get the UTI of the pasteboard contents
-//    func uti() -> String? {
-//        if board.hasImages { return "public.image" }
-//        if board.hasURLs { return "public.url" }
-//        if board.hasStrings { return "public.plain-text" }
-//        if board.data(forPasteboardType: "public.content") != nil { return "public.content" }
-//        return nil
-//    }
-//
-//    // Function to retrieve data from the board
-//    func get() -> Any? {
-//        if let url = board.url { return url }
-//        if let image = board.image { return image.pngData() }
-//        if let string = board.string { return string }
-//        return board.data(forPasteboardType: "public.content")
-//    }
-//
-//    // Function to set data to the board
-//    func set(data: [String: Any]) {
-//        board.setItems([data], options: [:])
-//    }
-// }
+public extension String {
+    func isURL() -> Bool {
+        guard let url = URL(string: self) else {
+            return false
+        }
+        return !(url.scheme == nil || url.host() == nil)
+    }
+}
+struct TView: UIViewRepresentable {
+    func updateUIView(_ uiView: LPLinkView, context: Context) {
+        return
+    }
+    
+    func makeUIView(context: Context) -> LPLinkView {
+        let uiView = LPLinkView(url: URL(string: "https://www.google.com/")!)
+        
+        return uiView
+    }
+}
+
+#Preview {
+    Group {
+        ActivityIndicator()
+            .animated(true)
+            .style(.large)
+        VStack {
+            Text("https://www.google.com/")
+                .frame(width: .infinity, alignment: .leading)
+            LinkPresentationView(url:URL(string: "https://www.facebook.com/")!)
+                .frame(width: 100, alignment: .leading)
+        }
+        .frame(height: 200)
+    }
+}
 
 private struct PasteboardContextModifier: ViewModifier {
     func body(content: Content) -> some View {
@@ -170,9 +161,6 @@ private struct ClipboardHasContentModifier: ViewModifier {
 }
 
 public extension View {
-    func onSceneActivate(perform action: @escaping () -> Void) -> some View {
-        modifier(SceneActivationActionModifier(action: action))
-    }
 
     func onPasteboardContent(perform action: @escaping () -> Void) -> some View {
         modifier(ClipboardHasContentModifier(action: action))

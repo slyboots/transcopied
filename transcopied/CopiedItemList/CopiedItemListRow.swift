@@ -32,66 +32,67 @@ struct ConditionalRowText: View {
 
 struct CopiedItemRow: View {
     @Bindable var item: CopiedItem
+    private var iconName: String
+    private var iconColor: Color
 
     var body: some View {
-        HStack(alignment: .top) {
-            VStack {
-                switch item.type {
-                    case "public.image":
-                        Image(systemName: "text.alignleft")
-                            .imageScale(.large)
-                            .aspectRatio(contentMode: .fit)
-                            .foregroundColor(.accentColor)
-                            .font(.system(size: 24))
-                    case "public.url":
-                        Image(systemName: "text.alignleft")
-                            .imageScale(.large)
-                            .aspectRatio(contentMode: .fit)
-                            .foregroundColor(.blue)
-                            .font(.system(size: 24))
-                    case "public.plain-text":
-                        Image(systemName: "text.alignleft")
-                            .imageScale(.large)
-                            .aspectRatio(contentMode: .fit)
-                            .foregroundColor(.secondary)
-                            .font(.system(size: 24))
-                    default:
-                        Image(systemName: "text.alignleft")
-                            .imageScale(.large)
-                            .aspectRatio(contentMode: .fit)
-                            .foregroundColor(.secondary)
-                            .font(.system(size: 24))
-                }
-            }
-            .frame(maxHeight: .infinity, alignment: .topTrailing)
+        HStack(alignment: .center) {
             VStack {
                 HStack {
+                    Image(systemName: self.iconName)
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundStyle(self.iconColor)
                     Text(
                         !item.title.isEmpty
-                            ? item.title
-                            : (item.text ?? "")
+                        ? item.title
+                        : (item.text)
                     )
-                    .font(.callout)
-                    .lineLimit(1)
                     .truncationMode(.tail)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .fixedSize(horizontal: false, vertical: true)
+                    .underline(self.item.type.contains("url"))
+//                    .foregroundStyle(.blue)
                 }
-                Spacer()
                 HStack {
-                    Image(systemName: "info.circle")
-                        .symbolRenderingMode(.monochrome)
-                    Text("\(item.text?.count ?? 0) characters")
+                    // TODO: make this section differ based on item type
+                    if !item.text.isEmpty {
+                        Image(systemName: "info.circle")
+                            .symbolRenderingMode(.monochrome)
+                        Text("\(item.text.count) characters")
+                    }
                     Image(systemName: "clock")
                         .symbolRenderingMode(.monochrome)
                     Text(relativeDateFmt(item.timestamp))
                 }
+                .dynamicTypeSize(.xSmall)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .font(.footnote)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(.tertiary)
             }
+            .frame(maxHeight: 40)
         }
-        .frame(maxHeight: 40, alignment: .center)
+    }
+
+    
+    init(item: CopiedItem) {
+        self.item = item
+        switch item.type {
+            case "public.image":
+                self.iconName = "photo"
+                self.iconColor = .accent
+            case "public.url":
+                self.iconName = "link"
+                self.iconColor = .blue
+            case "public.plain-text":
+                self.iconName = "text.alignleft"
+                self.iconColor = .secondary
+            case "public.content":
+                self.iconName = "curlybraces.square"
+                self.iconColor = .secondary
+            default:
+                self.iconName = "questionmark"
+                self.iconColor = .primary
+        }
     }
 
     private func relativeDateFmt(_ date: Date) -> String {
@@ -125,7 +126,67 @@ struct CopiedItemRow: View {
             )
         }
         .frame(height: 500, alignment: .center)
-        .listStyle(.plain)
+        .listStyle(.automatic)
         .modelContainer(for: CopiedItem.self, inMemory: true)
     }
 }
+
+
+#Preview("Url Row", traits: .sizeThatFitsLayout) {
+    Group {
+        @State var exampleData: [CopiedItem] = [
+            CopiedItem(
+                content: URL(string: "https://google.com")!.absoluteURL,
+                type: .url,
+                timestamp: Date.init(timeIntervalSinceNow: -10000)
+            ),
+            CopiedItem(content: URL(string: "file:///tmp/test/owufhcowhcouwehdcouhedouchweoduhouhdcwdeo")!.absoluteURL, type: .url, timestamp: nil),
+            CopiedItem(
+                content: URL(string: "https://areally.long.url/?q=123idhwiue")!,
+                type: .url,
+                title: "URL with a title",
+                timestamp: Date(timeIntervalSince1970: .zero)
+            ),
+        ]
+        List(exampleData) { item in
+            @Bindable var item = item
+            
+            CopiedItemRow(
+                item: item
+            )
+        }
+        .frame(height: 500, alignment: .center)
+        .listStyle(.automatic)
+        .modelContainer(for: CopiedItem.self, inMemory: true)
+    }
+}
+
+#Preview("Url Preview Row", traits: .sizeThatFitsLayout) {
+    Group {
+        @State var exampleData: [CopiedItem] = [
+            CopiedItem(
+                content: URL(string: "https://google.com")!,
+                type: .url,
+                timestamp: Date.init(timeIntervalSinceNow: -10000)
+            ),
+            CopiedItem(content: URL(string: "file:///tmp/test/owufhcowhcouwehdcouhedouchweoduhouhdcwdeo")!, type: .url, timestamp: nil),
+            CopiedItem(
+                content: URL(string: "https://areally.long.url/?q=123idhwiue")!,
+                type: .url,
+                title: "URL with a title",
+                timestamp: Date(timeIntervalSince1970: .zero)
+            ),
+        ]
+        List(exampleData) { item in
+            @Bindable var item = item
+            
+            CopiedItemRow(
+                item: item
+            )
+        }
+        .frame(height: 500, alignment: .center)
+        .listStyle(.automatic)
+        .modelContainer(for: CopiedItem.self, inMemory: true)
+    }
+}
+

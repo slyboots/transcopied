@@ -6,6 +6,7 @@
 //
 import SwiftData
 import SwiftUI
+import CompoundPredicate
 
 
 struct CopiedItemList: View {
@@ -54,23 +55,50 @@ struct CopiedItemList: View {
         }
     }
 
-    init(searchText: String, searchScope: String) {
-        let emptySearch = searchText.isEmpty
-        let anyScope = searchScope == ContentTypeFilter.any.rawValue
-        let noFilter = emptySearch && anyScope
-        let filter = #Predicate<CopiedItem> { item in
-            return noFilter ||
-                (anyScope || item.type.localizedStandardContains(searchScope)) &&
-                (emptySearch || (
-                    item.title.contains(searchText) ||
-                    item.content.contains(searchText.utf8)
-                ))
+    static func contentAsStringMatch(content: Data) ->  Predicate<CopiedItem> {
+//        let dataContent = Data(content.utf8)
+        let strContent = String(data: content, encoding: .utf8)!
+        
+        return #Predicate<CopiedItem> {
+            content.isEmpty || (
+                $0.content.contains(strContent) ||
+                $0.title.contains(strContent)
+            )
         }
+    }
+    
+    init(searchText: String, searchScope: String) {
+        let searchData = searchText.data(using: .utf8) ?? nil
+
+        let emptyScope = #Predicate<CopiedItem> {item in
+            return searchScope.isEmpty
+        }
+        let matchesScope = #Predicate<CopiedItem>{item in
+            item.type.localizedStandardContains(searchScope)
+        }
+        let emptySearch = #Predicate<CopiedItem>{item in
+            searchText.isEmpty
+        }
+        let matchingTitle = #Predicate<CopiedItem>{item in
+            item.title.contains(searchText)
+        }
+//        let matchingContent = #Predicate<CopiedItem>{item in
+//            searchData != nil ? item.content.contains(searchData!) : false
+//        }
+        let matchingContent = CopiedItemList.contentAsStringMatch(content: searchData!)
+
+        let scopeFilter = [emptyScope, matchesScope].disjunction()
+        let queryFilter = [emptySearch, [matchingTitle, matchingContent].disjunction()].disjunction()
+
+//        let queryFilter = [matchingContent, matchingTitle].disjunction()
+        
         _items = Query(
-            filter: filter,
+//            filter: [queryFilter, scopeFilter].conjunction(),
+            filter: queryFilter,
             sort: \CopiedItem.timestamp,
             order: .reverse
         )
+        
     }
 
     private func addItem() {
@@ -104,7 +132,7 @@ struct CopiedItemList: View {
     }
 }
 enum ContentTypeFilter: String {
-    case text = "public.text"
+    case text = "public.plain-text"
     case url = "public.url"
     case image = "public.image"
     case file = "public.content"
@@ -120,13 +148,13 @@ struct CopiedItemListContainer: View {
     var body: some View {
         CopiedItemList(searchText: searchText, searchScope: searchScope.rawValue)
             .searchable(text: $searchText)
-            .searchScopes($searchScope, activation: .onSearchPresentation) {
-                Text("Text").tag(ContentTypeFilter.text)
-                Text("URL").tag(ContentTypeFilter.url)
-                Text("Image").tag(ContentTypeFilter.image)
-                Text("File").tag(ContentTypeFilter.file)
-                Text("All").tag(ContentTypeFilter.any)
-            }
+//            .searchScopes($searchScope, activation: .onSearchPresentation) {
+//                Text("Text").tag(ContentTypeFilter.text)
+//                Text("URL").tag(ContentTypeFilter.url)
+//                Text("Image").tag(ContentTypeFilter.image)
+//                Text("File").tag(ContentTypeFilter.file)
+//                Text("All").tag(ContentTypeFilter.any)
+//            }
     }
 }
 

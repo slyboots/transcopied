@@ -60,9 +60,18 @@ struct CopiedEditorView: View {
                             .onChange(of: editorFocused) {
                                 bottomBarPlacement = editorFocused != nil ? .keyboard : .bottomBar
                             }
-//                            .containerRelativeFrame(.horizontal, alignment: .top)
                         Spacer()
                     }
+                case "public.image":
+                    VStack {
+                        Image(data: item.data)!
+                            .resizable(true)
+                            .scaledToFit()
+                            .fill(alignment: .center)
+                            .padding()
+                        Spacer()
+                    }
+
 
                 default:
                     Spacer()
@@ -168,7 +177,7 @@ struct CopiedEditorView: View {
 #Preview("URL Clip no Title") {
     CopiedEditorView(
         item: CopiedItem(
-            content: URL(string: "https://www.reddit.com/"),
+            content: URL(string: "https://www.reddit.com/") as Any,
             type: PasteboardContentType.url,
             title: "",
             timestamp: Date()

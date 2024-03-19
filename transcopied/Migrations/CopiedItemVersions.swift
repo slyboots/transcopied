@@ -86,8 +86,9 @@ enum CopiedItemSchemaV2: VersionedSchema {
         var type: String = ""
         var timestamp: Date = Date.init(timeIntervalSince1970: .zero)
 
+        var content: String = ""
         @Attribute(.externalStorage)
-        var content: Data = Data()
+        var data: Data = Data()
 
         @Transient var text: String?
         @Transient var url: URL?
@@ -100,22 +101,80 @@ enum CopiedItemSchemaV2: VersionedSchema {
                     let I = (content as! UIImage)
                     self.uid = hashString(data: I.pngData()!)
                     self.type = PasteboardContentType.image.rawValue
-                    self.content = I.pngData()!
+                    self.data = I.pngData()!
                 case .file:
                     let D = (content as! Data)
                     self.uid = hashString(data: D)
                     self.type = PasteboardContentType.file.rawValue
-                    self.content = Data(D)
+                    self.data = Data(D)
                 case .text:
                     let S = (content as! String)
                     self.uid = hashString(data: Data(S.utf8))
                     self.type = PasteboardContentType.text.rawValue
-                    self.content = Data(S.utf8)
+                    self.content = S
                 case .url:
                     let U = (content as! URL)
                     self.uid = hashString(data: Data(U.absoluteString.utf8))
                     self.type = PasteboardContentType.url.rawValue
-                    self.content = Data(U.absoluteString.utf8)
+                    self.content = U.absoluteString
+            }
+            if !self.content.isEmpty {
+                self.timestamp = timestamp ?? Date(timeIntervalSinceNow: TimeInterval(0))
+            }
+            self.title = title
+        }
+    }
+}
+
+
+enum CopiedItemSchemaV3: VersionedSchema {
+    static var versionIdentifier: Schema.Version = .init(3, 0, 0)
+    static var models: [any PersistentModel.Type] {
+        return [CopiedItem.self]
+    }
+
+    @Model
+    final class CopiedItem {
+        var uid: String = "00000000-0000-0000-0000-000000000000"
+        var title: String = ""
+        var type: String = ""
+        var timestamp: Date = Date.init(timeIntervalSince1970: .zero)
+
+        var content: String = ""
+        @Attribute(.externalStorage)
+        var data: Data = Data()
+
+        @Transient var text: String?
+        @Transient var url: URL?
+        @Transient var file: Data?
+        @Transient var image: UIImage?
+
+        init(content: Any, type: PasteboardContentType, title: String = "", timestamp: Date?) {
+            switch type {
+                case .image:
+                    let I = (content as! UIImage)
+                    self.uid = hashString(data: I.pngData()!)
+                    self.type = PasteboardContentType.image.rawValue
+                    self.data = I.pngData()!
+                    self.content = ""
+                case .file:
+                    let D = (content as! Data)
+                    self.uid = hashString(data: D)
+                    self.type = PasteboardContentType.file.rawValue
+                    self.data = Data(D)
+                    self.content = ""
+                case .text:
+                    let S = (content as! String)
+                    self.uid = hashString(data: Data(S.utf8))
+                    self.type = PasteboardContentType.text.rawValue
+                    self.content = S
+                    self.data = Data()
+                case .url:
+                    let U = (content as! URL)
+                    self.uid = hashString(data: Data(U.absoluteString.utf8))
+                    self.type = PasteboardContentType.url.rawValue
+                    self.content = U.absoluteString
+                    self.data = Data()
             }
             if !self.content.isEmpty {
                 self.timestamp = timestamp ?? Date(timeIntervalSinceNow: TimeInterval(0))
@@ -128,12 +187,13 @@ enum CopiedItemSchemaV2: VersionedSchema {
 
 enum CopiedItemsMigrationPlan: SchemaMigrationPlan {
     static var schemas: [any VersionedSchema.Type] {
-        [CopiedItemSchemaV1.self, CopiedItemSchemaV2.self]
+        [CopiedItemSchemaV1.self, CopiedItemSchemaV2.self, CopiedItemSchemaV3.self]
     }
 
     static var stages: [MigrationStage] {
         [
-            V1__V2
+//            V1__V2,
+//            V2__V3
         ]
     }
 
@@ -154,4 +214,20 @@ enum CopiedItemsMigrationPlan: SchemaMigrationPlan {
     )
 
     static let V1__V2 = MigrationStage.lightweight(fromVersion: CopiedItemSchemaV1.self, toVersion: CopiedItemSchemaV2.self)
+    static let V2__V3 = MigrationStage.lightweight(fromVersion: CopiedItemSchemaV2.self, toVersion: CopiedItemSchemaV3.self)
+//    static let V2__v3 = MigrationStage.custom(
+//        fromVersion: CopiedItemSchemaV2.self,
+//        toVersion: CopiedItemSchemaV3.self,
+//        willMigrate: { context in
+//            
+//        },
+//        didMigrate: { context in
+//            let copieditems = try context.fetch(FetchDescriptor<CopiedItemSchemaV1_5.CopiedItem>())
+//            for item in copieditems {
+//                if item.content != nil {
+//                    item.dummyColumn = Data(item.content!.utf8)
+//                }
+//            }
+//        }
+//    )
 }

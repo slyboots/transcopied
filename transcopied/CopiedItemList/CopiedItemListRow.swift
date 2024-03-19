@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 struct ConditionalRowText: View {
     var main: String?
     var alt: String? = ""
@@ -35,41 +36,59 @@ struct CopiedItemRow: View {
     private var iconName: String
     private var iconColor: Color
 
+    private var bytefmt: ByteCountFormatter = ByteCountFormatter()
+
     var body: some View {
         HStack(alignment: .center) {
-            VStack {
-                HStack {
-                    Image(systemName: self.iconName)
-                        .resizable()
-                        .scaledToFit()
-                        .foregroundStyle(self.iconColor)
-                    Text(
-                        !item.title.isEmpty
-                        ? item.title
-                        : (item.text)
-                    )
-                    .truncationMode(.tail)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .underline(self.item.type.contains("url"))
-//                    .foregroundStyle(.blue)
-                }
-                HStack {
-                    // TODO: make this section differ based on item type
-                    if !item.text.isEmpty {
-                        Image(systemName: "info.circle")
-                            .symbolRenderingMode(.monochrome)
-                        Text("\(item.text.count) characters")
+            GeometryReader { geometry in
+                VStack {
+                    HStack {
+                        Image(systemName: self.iconName)
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundStyle(self.iconColor)
+                        Text(
+                            !item.title.isEmpty
+                            ? item.title
+                            : (item.text)
+                        )
+                        .truncationMode(.tail)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .underline(self.item.type.contains("url"))
+                        //                    .foregroundStyle(.blue)
                     }
-                    Image(systemName: "clock")
-                        .symbolRenderingMode(.monochrome)
-                    Text(relativeDateFmt(item.timestamp))
-                }
-                .dynamicTypeSize(.xSmall)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .font(.footnote)
-                .foregroundStyle(.tertiary)
+                    HStack {
+                        // TODO: make this section differ based on item type
+                        if !item.text.isEmpty {
+                            Image(systemName: "info.circle")
+                                .symbolRenderingMode(.monochrome)
+                            Text("\(item.text.count) characters")
+                        }
+                        Image(systemName: "clock")
+                            .symbolRenderingMode(.monochrome)
+                        Text(relativeDateFmt(item.timestamp))
+                    }
+                    .dynamicTypeSize(.xSmall)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .font(.footnote)
+                    .foregroundStyle(.tertiary)
+                    
+                    if (self.item.type == "public.image") {
+                        HStack {
+                            Text("Image Data: ")
+                            Text(
+                                self.bytefmt.string(fromByteCount: Int64(item.content.count))
+                            )
+                            
+//                            Image(data: self.item.content)!
+//                                .resizable()
+//                                .clipped()
+//                                .maxHeight(.infinity)
+//                                .maxWidth(100)
+                        }
+                    }
+                }.frame(maxHeight: 80)
             }
-            .frame(maxHeight: 40)
         }
     }
 

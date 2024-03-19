@@ -77,7 +77,7 @@ class PBManager {
             return url
         }
         if let image = board.image {
-            return image.pngData()
+            return image
         }
         if let string = board.string {
             if string.isURL() {

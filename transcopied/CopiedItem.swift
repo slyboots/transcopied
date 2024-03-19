@@ -44,38 +44,38 @@ final class CopiedItem {
     var title: String = ""
     var type: String = ""
     var timestamp: Date = Date(timeIntervalSince1970: .zero)
-
+    var content: String = ""
     @Attribute(.externalStorage)
-    var content: Data = Data()
+    var data: Data = Data()
 
     @Transient
     var text: String {
-        get { return String(data: content, encoding: .utf8) ?? ""}
+        get { return content }
         set {
-            content = Data(newValue.utf8)
+            content = newValue
         }
     }
 
     @Transient
     var url: URL {
-        get { return URL(string: String(data: content, encoding: .utf8)!)!}
+        get { return URL(string: content)!}
 //        get { return type == PasteboardContentType.url.rawValue ? URL(string: String(data: content, encoding: .utf8)!) : nil }
         set {
-            content = Data(newValue.absoluteString.removingPercentEncoding!.utf8)
+            content = newValue.absoluteString.removingPercentEncoding!
         }
     }
 
     @Transient
     var file: Data? {
-        get { return type == PasteboardContentType.file.rawValue ? content : nil}
-        set { content = Data(newValue!)}
+        get { return type == PasteboardContentType.file.rawValue ? data : nil}
+        set { data = Data(newValue!)}
     }
 
     @Transient
     var image: UIImage? {
-        get {return type == PasteboardContentType.image.rawValue ? UIImage(data: content) : nil}
+        get {return type == PasteboardContentType.image.rawValue ? UIImage(data: data) : nil}
         set {
-            content = Data(newValue!.pngData()!)
+            data = Data(newValue!.pngData()!)
         }
     }
 
@@ -85,25 +85,25 @@ final class CopiedItem {
                 let I = (content as! UIImage)
                 self.uid = hashString(data: I.pngData()!)
                 self.type = PasteboardContentType.image.rawValue
-                self.content = I.pngData()!
+                self.data = I.pngData()!
                 self.title = title
             case .url:
                 let U = (content as! URL)
                 self.uid = hashString(data: Data(U.absoluteString.utf8))
                 self.type = PasteboardContentType.url.rawValue
-                self.content = Data(U.absoluteString.utf8)
+                self.content = U.absoluteString
                 self.title = title.isEmpty ? (U.host() ?? U.formatted(.url)) : title
             case .text:
                 let S = (content as! String)
                 self.uid = hashString(data: Data(S.utf8))
                 self.type = PasteboardContentType.text.rawValue
-                self.content = Data(S.utf8)
+                self.content = S
                 self.title = title
             case .file:
                 let D = (content as! Data)
                 self.uid = hashString(data: D)
                 self.type = PasteboardContentType.file.rawValue
-                self.content = Data(D)
+                self.data = Data(D)
                 self.title = title
         }
         if !self.content.isEmpty {
@@ -200,7 +200,7 @@ public extension Binding where Value: Equatable {
         VStack {
             Text(item.title)
             Text(item.type)
-            Text(String(data: item.content, encoding: .utf8)!)
+            Text(item.content)
             Text(item.timestamp.ISO8601Format())
         }
     }

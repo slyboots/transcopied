@@ -20,12 +20,13 @@ struct Transcopied: App {
             schema: schema,
             isStoredInMemoryOnly: false,
             allowsSave: true,
-            cloudKitDatabase: ModelConfiguration.CloudKitDatabase.private("iCloud.Transcopied")
+            cloudKitDatabase: ModelConfiguration.CloudKitDatabase.private("transcopied.dev.1")
         )
         do {
             return try ModelContainer(
                 for: schema,
-                migrationPlan: CopiedItemsMigrationPlan.self,
+//                migrationPlan: .none,
+//                migrationPlan: CopiedItemsMigrationPlan.self,
                 configurations: [modelConfiguration]
             )
         }

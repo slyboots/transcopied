@@ -151,61 +151,32 @@ struct CopiedItemRow: View {
 }
 
 
-#Preview("Url Row", traits: .sizeThatFitsLayout) {
-    Group {
-        @State var exampleData: [CopiedItem] = [
-            CopiedItem(
-                content: URL(string: "https://google.com")!.absoluteURL,
-                type: .url,
-                timestamp: Date.init(timeIntervalSinceNow: -10000)
-            ),
-            CopiedItem(content: URL(string: "file:///tmp/test/owufhcowhcouwehdcouhedouchweoduhouhdcwdeo")!.absoluteURL, type: .url, timestamp: nil),
-            CopiedItem(
-                content: URL(string: "https://areally.long.url/?q=123idhwiue")!,
-                type: .url,
-                title: "URL with a title",
-                timestamp: Date(timeIntervalSince1970: .zero)
-            ),
-        ]
-        List(exampleData) { item in
-            @Bindable var item = item
-            
-            CopiedItemRow(
-                item: item
-            )
-        }
-        .frame(height: 500, alignment: .center)
-        .listStyle(.automatic)
-        .modelContainer(for: CopiedItem.self, inMemory: true)
-    }
-}
-
-#Preview("Url Preview Row", traits: .sizeThatFitsLayout) {
-    Group {
-        @State var exampleData: [CopiedItem] = [
-            CopiedItem(
-                content: URL(string: "https://google.com")!,
-                type: .url,
-                timestamp: Date.init(timeIntervalSinceNow: -10000)
-            ),
-            CopiedItem(content: URL(string: "file:///tmp/test/owufhcowhcouwehdcouhedouchweoduhouhdcwdeo")!, type: .url, timestamp: nil),
-            CopiedItem(
-                content: URL(string: "https://areally.long.url/?q=123idhwiue")!,
-                type: .url,
-                title: "URL with a title",
-                timestamp: Date(timeIntervalSince1970: .zero)
-            ),
-        ]
-        List(exampleData) { item in
-            @Bindable var item = item
-            
-            CopiedItemRow(
-                item: item
-            )
-        }
-        .frame(height: 500, alignment: .center)
-        .listStyle(.automatic)
-        .modelContainer(for: CopiedItem.self, inMemory: true)
-    }
-}
-
+//#Preview("Url Preview Row", traits: .sizeThatFitsLayout) {
+//    Group {
+//        @State var exampleData: [CopiedItem] = [
+//            CopiedItem(
+//                content: URL(string: "https://google.com")!,
+//                type: .url,
+//                timestamp: Date.init(timeIntervalSinceNow: -10000)
+//            ),
+//            CopiedItem(content: URL(string: "file:///tmp/test/owufhcowhcouwehdcouhedouchweoduhouhdcwdeo")!, type: .url, timestamp: nil),
+//            CopiedItem(
+//                content: URL(string: "https://areally.long.url/?q=123idhwiue")!,
+//                type: .url,
+//                title: "URL with a title",
+//                timestamp: Date(timeIntervalSince1970: .zero)
+//            ),
+//        ]
+//        List(exampleData) { item in
+//            @Bindable var item = item
+//            
+//            CopiedItemRow(
+//                item: item
+//            )
+//        }
+//        .frame(height: 500, alignment: .center)
+//        .listStyle(.automatic)
+//        .modelContainer(for: CopiedItem.self, inMemory: true)
+//    }
+//}
+//

@@ -4,10 +4,9 @@
 //
 //  Created by Dakota Lorance on 11/26/23.
 //
+import CompoundPredicate
 import SwiftData
 import SwiftUI
-import CompoundPredicate
-
 
 struct CopiedItemList: View {
     @Environment(\.modelContext) private var modelContext
@@ -26,7 +25,7 @@ struct CopiedItemList: View {
             }
             .onDelete(perform: deleteItems)
         }
-        .onAppear(perform: {self.addItem()})
+        .onAppear(perform: { addItem() })
         .navigationTitle("Clippings")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -55,59 +54,54 @@ struct CopiedItemList: View {
         }
     }
 
-    static func contentAsStringMatch(content: Data) ->  Predicate<CopiedItem> {
+    static func contentAsStringMatch(content: Data) -> Predicate<CopiedItem> {
 //        let dataContent = Data(content.utf8)
         let strContent = String(data: content, encoding: .utf8)!
-        
+
         return #Predicate<CopiedItem> {
             content.isEmpty || (
                 $0.content.contains(strContent) ||
-                $0.title.contains(strContent)
+                    $0.title.contains(strContent)
             )
         }
     }
-    
-    init(searchText: String, searchScope: String) {
-        let searchData = searchText.data(using: .utf8) ?? nil
 
-        let emptyScope = #Predicate<CopiedItem> {item in
+    init(searchText: String, searchScope: String) {
+        let emptyScope = #Predicate<CopiedItem> { _ in
             return searchScope.isEmpty
         }
-        let matchesScope = #Predicate<CopiedItem>{item in
+        let matchesScope = #Predicate<CopiedItem> { item in
             item.type.localizedStandardContains(searchScope)
         }
-        let emptySearch = #Predicate<CopiedItem>{item in
+        let emptySearch = #Predicate<CopiedItem> { _ in
             searchText.isEmpty
         }
-        let matchingTitle = #Predicate<CopiedItem>{item in
-            item.title.contains(searchText)
+        let matchingTitle = #Predicate<CopiedItem> { item in
+            item.title.localizedStandardContains(searchText)
         }
-//        let matchingContent = #Predicate<CopiedItem>{item in
-//            searchData != nil ? item.content.contains(searchData!) : false
-//        }
-        let matchingContent = CopiedItemList.contentAsStringMatch(content: searchData!)
+        let matchingContent = #Predicate<CopiedItem> { item in
+            item.content.localizedStandardContains(searchText)
+        }
 
         let scopeFilter = [emptyScope, matchesScope].disjunction()
         let queryFilter = [emptySearch, [matchingTitle, matchingContent].disjunction()].disjunction()
 
-//        let queryFilter = [matchingContent, matchingTitle].disjunction()
-        
         _items = Query(
-//            filter: [queryFilter, scopeFilter].conjunction(),
-            filter: queryFilter,
+            filter: [queryFilter, scopeFilter].conjunction(),
             sort: \CopiedItem.timestamp,
             order: .reverse
         )
-        
     }
 
     private func addItem() {
         withAnimation {
-            let content = self.pbm.get()
-            guard !(content == nil) else { return }
+            let content = pbm.get()
+            guard !(content == nil) else {
+                return
+            }
 
-            let pbtype = self.pbm.uti
-            
+            let pbtype = pbm.uti
+
             let newItem = CopiedItem(
                 content: content!,
                 type: PasteboardContentType[pbtype!]!,
@@ -115,9 +109,9 @@ struct CopiedItemList: View {
                 timestamp: Date()
             )
             do {
-
                 try newItem.save(context: modelContext)
-            } catch _ {
+            }
+            catch _ {
                 return
             }
         }
@@ -131,6 +125,7 @@ struct CopiedItemList: View {
         }
     }
 }
+
 enum ContentTypeFilter: String {
     case text = "public.plain-text"
     case url = "public.url"
@@ -148,13 +143,13 @@ struct CopiedItemListContainer: View {
     var body: some View {
         CopiedItemList(searchText: searchText, searchScope: searchScope.rawValue)
             .searchable(text: $searchText)
-//            .searchScopes($searchScope, activation: .onSearchPresentation) {
-//                Text("Text").tag(ContentTypeFilter.text)
-//                Text("URL").tag(ContentTypeFilter.url)
-//                Text("Image").tag(ContentTypeFilter.image)
-//                Text("File").tag(ContentTypeFilter.file)
-//                Text("All").tag(ContentTypeFilter.any)
-//            }
+            .searchScopes($searchScope, activation: .onSearchPresentation) {
+                Text("Text").tag(ContentTypeFilter.text)
+                Text("URL").tag(ContentTypeFilter.url)
+                Text("Image").tag(ContentTypeFilter.image)
+                Text("File").tag(ContentTypeFilter.file)
+                Text("All").tag(ContentTypeFilter.any)
+            }
     }
 }
 

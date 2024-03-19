@@ -106,7 +106,7 @@ final class CopiedItem {
                 self.data = Data(D)
                 self.title = title
         }
-        if !self.content.isEmpty {
+        if !self.content.isEmpty || !self.data.isEmpty {
             self.timestamp = timestamp ?? Date(timeIntervalSinceNow: 0)
         }
     }
@@ -167,10 +167,6 @@ public extension Binding {
             set: { source.wrappedValue = $0 ? defaultValue : nil }
         )
     }
-
-//    init<T>(isNotNil source: Binding<T>, defaultValue: T) where Value == Data {
-//        self.init
-//    }
 }
 
 public extension Binding where Value: Equatable {
@@ -188,21 +184,25 @@ public extension Binding where Value: Equatable {
         )
     }
 }
-
 #Preview {
     Group {
-        @Bindable var item: CopiedItem = CopiedItem(
-            content: "Test Content",
-            type: .text,
-            title: "Test Title",
-            timestamp: Date(timeIntervalSinceNow: 0)
-        )
-        VStack {
-            Text(item.title)
-            Text(item.type)
-            Text(item.content)
-            Text(item.timestamp.ISO8601Format())
-        }
+        Text("Test")
     }
-    .modelContainer(for: CopiedItem.self, inMemory: true, isAutosaveEnabled: true)
 }
+//#Preview {
+//    Group {
+//        @Bindable var item: CopiedItem = CopiedItem(
+//            content: "Test Content",
+//            type: .text,
+//            title: "Test Title",
+//            timestamp: Date(timeIntervalSinceNow: 0)
+//        )
+//        VStack {
+//            Text(item.title)
+//            Text(item.type)
+//            Text(item.content)
+//            Text(item.timestamp.ISO8601Format())
+//        }
+//    }
+//    .modelContainer(for: CopiedItem.self, inMemory: true, isAutosaveEnabled: true)
+//}

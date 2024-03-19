@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftUIX
 
 struct ConditionalRowText: View {
     var main: String?
@@ -38,57 +39,57 @@ struct CopiedItemRow: View {
     private var bytefmt = ByteCountFormatter()
 
     var body: some View {
-        HStack(alignment: .center) {
-            GeometryReader { _ in
-                VStack {
-                    HStack {
-                        Image(systemName: iconName)
-                            .resizable()
-                            .scaledToFit()
-                            .foregroundStyle(iconColor)
-                        Text(
-                            !item.title.isEmpty
-                                ? item.title
-                                : (item.text)
-                        )
+        HStack(alignment: .top ) {
+            Image(systemName: iconName)
+                .foregroundStyle(Color.accent)
+                .alignmentGuide(.lastTextBaseline)
+            VStack(alignment: .leading) {
+                if !item.title.isEmpty {
+                    Text(item.title)
+                        .lineLimit(1)
                         .truncationMode(.tail)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .underline(item.type.contains("url"))
-                        //                    .foregroundStyle(.blue)
-                    }
-                    HStack {
-                        // TODO: make this section differ based on item type
-                        if !item.text.isEmpty {
+                }
+                if ["public.url", "public.plain-text"].contains([item.type]) {
+                    Text(item.content)
+                        .lineLimit(5)
+                        .truncationMode(.tail)
+                }
+                if item.type == "public.image" {
+                    Image(image: item.image!)
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(maxHeight:80)
+                        .clipped()
+                }
+                HStack() {
+                    if !item.text.isEmpty {
+                        HStack(spacing:0) {
                             Image(systemName: "info.circle")
                                 .symbolRenderingMode(.monochrome)
                             Text("\(item.text.count) characters")
                         }
+                    }
+                    if item.image != nil {
+                        HStack {
+                            Text("PNG "+item.image!.size.width.formatted()+"x"+item.image!.size.height.formatted())
+                        }
+                    }
+                    HStack(spacing:0) {
                         Image(systemName: "clock")
                             .symbolRenderingMode(.monochrome)
                         Text(relativeDateFmt(item.timestamp))
                     }
-                    .dynamicTypeSize(.xSmall)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .font(.footnote)
-                    .foregroundStyle(.tertiary)
-
-                    if item.type == "public.image" {
-                        HStack {
-                            Text("Image Data: ")
-                            Text(
-                                bytefmt.string(fromByteCount: Int64(item.content.count))
-                            )
-
-//                            Image(data: self.item.content)!
-//                                .resizable()
-//                                .clipped()
-//                                .maxHeight(.infinity)
-//                                .maxWidth(100)
-                        }
-                    }
-                }.frame(maxHeight: 80)
+                }
+                .font(.caption)
+                .foregroundStyle(.tertiary)
             }
-        }.padding()
+            if item.type == "public.url" {
+                Spacer()
+                LinkPresentationView(url: item.url)
+                    .maxWidth(50)
+                    .clipped()
+            }
+        }
     }
 
     init(item: CopiedItem) {
@@ -134,10 +135,15 @@ struct CopiedItemRow: View {
                 title: "TITLE",
                 timestamp: Date(timeIntervalSince1970: .zero)
             ),
+            CopiedItem(
+                content: "iuweghcdiouwgcoewudgsddddddddddddddddddddddddddddddddddddddsdddddddddddddddddddddddddddddddddddddddddddchoewudchoewudchoecwidhcduwhcouwdhcoudwhcowudhcoh",
+                type: .text,
+                title: "",
+                timestamp: Date()
+            ),
         ]
         List(exampleData) { item in
             @Bindable var item = item
-
             CopiedItemRow(
                 item: item
             )
@@ -200,7 +206,7 @@ struct CopiedItemRow: View {
                 item: item
             )
         }
-        .frame(height: 500, alignment: .center)
+        .frame(height: 500)
         .listStyle(.automatic)
         .modelContainer(for: CopiedItem.self, inMemory: true)
     }

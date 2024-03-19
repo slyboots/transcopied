@@ -18,14 +18,14 @@ struct ConditionalRowText: View {
 
     func calc(main: String?, alt: String?, fallback: String) -> String {
         if main == nil, alt == nil {
-            return fallback
+            fallback
         }
         else if alt != nil {
-            return main != nil ? String(main!.prefix(100)) : String(alt!.prefix(100))
+            main != nil ? String(main!.prefix(100)) : String(alt!.prefix(100))
         }
         else {
             // main should be safe to use
-            return String(main!.prefix(100))
+            String(main!.prefix(100))
         }
     }
 }
@@ -88,7 +88,7 @@ struct CopiedItemRow: View {
                     }
                 }.frame(maxHeight: 80)
             }
-        }
+        }.padding()
     }
 
     init(item: CopiedItem) {
@@ -148,32 +148,60 @@ struct CopiedItemRow: View {
     }
 }
 
-// #Preview("Url Preview Row", traits: .sizeThatFitsLayout) {
-//    Group {
-//        @State var exampleData: [CopiedItem] = [
-//            CopiedItem(
-//                content: URL(string: "https://google.com")!,
-//                type: .url,
-//                timestamp: Date.init(timeIntervalSinceNow: -10000)
-//            ),
-//            CopiedItem(content: URL(string: "file:///tmp/test/owufhcowhcouwehdcouhedouchweoduhouhdcwdeo")!, type: .url, timestamp: nil),
-//            CopiedItem(
-//                content: URL(string: "https://areally.long.url/?q=123idhwiue")!,
-//                type: .url,
-//                title: "URL with a title",
-//                timestamp: Date(timeIntervalSince1970: .zero)
-//            ),
-//        ]
-//        List(exampleData) { item in
-//            @Bindable var item = item
-//
-//            CopiedItemRow(
-//                item: item
-//            )
-//        }
-//        .frame(height: 500, alignment: .center)
-//        .listStyle(.automatic)
-//        .modelContainer(for: CopiedItem.self, inMemory: true)
-//    }
-// }
-//
+#Preview("Url Preview Row", traits: .sizeThatFitsLayout) {
+    Group {
+        @State var exampleData: [CopiedItem] = [
+            CopiedItem(
+                content: URL(string: "https://google.com")!,
+                type: .url,
+                timestamp: Date(timeIntervalSinceNow: -10000)
+            ),
+            CopiedItem(content: URL(string: "file:///tmp/test/owufhcowhcouwehdcouhedouchweoduhouhdcwdeo")!, type: .url, timestamp: nil),
+            CopiedItem(
+                content: URL(string: "https://areally.long.url/?q=123idhwiue")!,
+                type: .url,
+                title: "URL with a title",
+                timestamp: Date(timeIntervalSince1970: .zero)
+            ),
+        ]
+        List(exampleData) { item in
+            @Bindable var item = item
+
+            CopiedItemRow(
+                item: item
+            )
+        }
+        .frame(height: 500, alignment: .center)
+        .listStyle(.automatic)
+        .modelContainer(for: CopiedItem.self, inMemory: true)
+    }
+}
+
+#Preview("Image Preview Row", traits: .sizeThatFitsLayout) {
+    Group {
+        @State var exampleData: [CopiedItem] = [
+            CopiedItem(
+                content: UIImage(systemName: "person.text.rectangle.fill"),
+                type: .image,
+                title: "",
+                timestamp: Date(timeIntervalSince1970: .zero)
+            ),
+            CopiedItem(
+                content: UIImage(systemName: "clock"),
+                type: .image,
+                title: "Image with a title",
+                timestamp: Date(timeIntervalSince1970: .zero)
+            ),
+        ]
+        List(exampleData) { item in
+            @Bindable var item = item
+
+            CopiedItemRow(
+                item: item
+            )
+        }
+        .frame(height: 500, alignment: .center)
+        .listStyle(.automatic)
+        .modelContainer(for: CopiedItem.self, inMemory: true)
+    }
+}

@@ -7,10 +7,10 @@
 
 import Combine
 import Foundation
-import SwiftUI
-import UniformTypeIdentifiers
 import LinkPresentation
+import SwiftUI
 import SwiftUIX
+import UniformTypeIdentifiers
 
 public enum PasteType: String, CaseIterable {
     case image = "public.image"
@@ -18,9 +18,7 @@ public enum PasteType: String, CaseIterable {
     case text = "public.plain-text"
     case file = "public.content"
     static subscript(index: String) -> PasteType? {
-        get {
-            return PasteType(rawValue: index) ?? PasteType.allCases.first(where: {"\($0)" == index })!
-        }
+        PasteType(rawValue: index) ?? PasteType.allCases.first(where: { index == "\($0)" })!
     }
 }
 
@@ -57,13 +55,13 @@ class PBManager {
     func hashed(data: Any, type: PasteType) -> Int {
         switch type {
             case .image:
-                return ((data as? Data)?.base64EncodedString().hashValue)!
+                ((data as? Data)?.base64EncodedString().hashValue)!
             case .url:
-                return ((data as? URL)?.absoluteString.hashValue)!
+                ((data as? URL)?.absoluteString.hashValue)!
             case .text:
-                return (data as? String)!.hashValue
+                (data as? String)!.hashValue
             default:
-                return (data as? Data)!.hashValue
+                (data as? Data)!.hashValue
         }
     }
 
@@ -101,14 +99,13 @@ public extension String {
         return !(url.scheme == nil || url.host() == nil)
     }
 }
+
 struct TView: UIViewRepresentable {
-    func updateUIView(_ uiView: LPLinkView, context: Context) {
-        return
-    }
-    
+    func updateUIView(_ uiView: LPLinkView, context: Context) {}
+
     func makeUIView(context: Context) -> LPLinkView {
         let uiView = LPLinkView(url: URL(string: "https://www.google.com/")!)
-        
+
         return uiView
     }
 }
@@ -121,7 +118,7 @@ struct TView: UIViewRepresentable {
         VStack {
             Text("https://www.google.com/")
                 .frame(width: .infinity, alignment: .leading)
-            LinkPresentationView(url:URL(string: "https://www.facebook.com/")!)
+            LinkPresentationView(url: URL(string: "https://www.facebook.com/")!)
                 .frame(width: 100, alignment: .leading)
         }
         .frame(height: 200)
@@ -161,7 +158,6 @@ private struct ClipboardHasContentModifier: ViewModifier {
 }
 
 public extension View {
-
     func onPasteboardContent(perform action: @escaping () -> Void) -> some View {
         modifier(ClipboardHasContentModifier(action: action))
     }
@@ -177,7 +173,7 @@ extension UIPasteboard {
     }
 
     var hasContentPublisher: AnyPublisher<Bool, Never> {
-        return Just(hasContent)
+        Just(hasContent)
             .merge(
                 with: NotificationCenter.default
                     .publisher(for: UIPasteboard.changedNotification, object: self)

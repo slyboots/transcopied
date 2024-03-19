@@ -7,13 +7,15 @@
 import Foundation
 import SwiftData
 import SwiftUI
-import UniformTypeIdentifiers
 import SwiftUIX
+import UniformTypeIdentifiers
 
 struct CopiedEditorView: View {
     enum EditorFocused {
-        case title, content
+        case title
+        case content
     }
+
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Environment(\.modelContext) private var modelContext
     @Bindable var item: CopiedItem
@@ -34,8 +36,8 @@ struct CopiedEditorView: View {
                 case "public.plain-text":
                     HStack {
                         Text(item.type) +
-                        Text(" - ") +
-                        Text("\(item.text.count) characters")
+                            Text(" - ") +
+                            Text("\(item.text.count) characters")
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .foregroundStyle(.secondary)
@@ -72,7 +74,6 @@ struct CopiedEditorView: View {
                         Spacer()
                     }
 
-
                 default:
                     Spacer()
                     EmptyView()
@@ -80,13 +81,13 @@ struct CopiedEditorView: View {
         }
         .defaultFocus($editorFocused, EditorFocused.title)
         .onAppear(perform: {
-            let _t = (item.title )
+            let _t = (item.title)
             let _c = (item.text)
 
-            if (!_c.isEmpty) {
+            if !_c.isEmpty {
                 editorFocused = .content
             }
-            else if (!_t.isEmpty && _c.isEmpty) {
+            else if !_t.isEmpty, _c.isEmpty {
                 editorFocused = .title
             }
             else {
@@ -185,7 +186,6 @@ struct CopiedEditorView: View {
     )
     .modelContainer(for: CopiedItem.self, inMemory: true)
 }
-
 
 #Preview("Image Clip with Title") {
     CopiedEditorView(

@@ -43,10 +43,10 @@ final class CopiedItem {
     var uid: String = "00000000-0000-0000-0000-000000000000"
     var title: String = ""
     var type: String = ""
-    var timestamp: Date = Date(timeIntervalSince1970: .zero)
+    var timestamp = Date(timeIntervalSince1970: .zero)
     var content: String = ""
     @Attribute(.externalStorage)
-    var data: Data = Data()
+    var data = Data()
 
     @Transient
     var text: String {
@@ -58,7 +58,7 @@ final class CopiedItem {
 
     @Transient
     var url: URL {
-        get { return URL(string: content)!}
+        get { return URL(string: content)! }
 //        get { return type == PasteboardContentType.url.rawValue ? URL(string: String(data: content, encoding: .utf8)!) : nil }
         set {
             content = newValue.absoluteString.removingPercentEncoding!
@@ -67,13 +67,13 @@ final class CopiedItem {
 
     @Transient
     var file: Data? {
-        get { return type == PasteboardContentType.file.rawValue ? data : nil}
-        set { data = Data(newValue!)}
+        get { return type == PasteboardContentType.file.rawValue ? data : nil }
+        set { data = Data(newValue!) }
     }
 
     @Transient
     var image: UIImage? {
-        get {return type == PasteboardContentType.image.rawValue ? UIImage(data: data) : nil}
+        get { return type == PasteboardContentType.image.rawValue ? UIImage(data: data) : nil }
         set {
             data = Data(newValue!.pngData()!)
         }
@@ -106,7 +106,7 @@ final class CopiedItem {
                 self.data = Data(D)
                 self.title = title
         }
-        if !self.content.isEmpty || !self.data.isEmpty {
+        if !self.content.isEmpty || !data.isEmpty {
             self.timestamp = timestamp ?? Date(timeIntervalSinceNow: 0)
         }
     }
@@ -142,12 +142,11 @@ public extension Binding where Value == URL {
     var stringBinding: Binding<String> {
         .init(get: {
             self.wrappedValue.absoluteString.removingPercentEncoding!
-        }, set: {newValue in
+        }, set: { newValue in
             self.wrappedValue = URL(string: newValue)!
         })
     }
 }
-
 
 public extension Binding {
     init(_ source: Binding<Value?>, _ defaultValue: Value) {
@@ -184,12 +183,14 @@ public extension Binding where Value: Equatable {
         )
     }
 }
+
 #Preview {
     Group {
         Text("Test")
     }
 }
-//#Preview {
+
+// #Preview {
 //    Group {
 //        @Bindable var item: CopiedItem = CopiedItem(
 //            content: "Test Content",
@@ -205,4 +206,4 @@ public extension Binding where Value: Equatable {
 //        }
 //    }
 //    .modelContainer(for: CopiedItem.self, inMemory: true, isAutosaveEnabled: true)
-//}
+// }

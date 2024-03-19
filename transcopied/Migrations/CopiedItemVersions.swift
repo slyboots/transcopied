@@ -5,16 +5,16 @@
 //  Created by Dakota Lorance on 3/3/24.
 //
 
+import CoreData
 import Foundation
 import SwiftData
-import CoreData
 import UIKit
 
 enum CopiedItemSchemaV1: VersionedSchema {
     // initial structure
     static var versionIdentifier: Schema.Version = .init(1, 0, 0)
     static var models: [any PersistentModel.Type] {
-        return [CopiedItem.self]
+        [CopiedItem.self]
     }
 
     enum CopiedItemType: String, Codable {
@@ -45,7 +45,7 @@ enum CopiedItemSchemaV1_5: VersionedSchema {
     // over to Data content columns
     static var versionIdentifier: Schema.Version = .init(1, 5, 0)
     static var models: [any PersistentModel.Type] {
-        return [CopiedItem.self]
+        [CopiedItem.self]
     }
 
     enum CopiedItemType: String, Codable {
@@ -76,7 +76,7 @@ enum CopiedItemSchemaV1_5: VersionedSchema {
 enum CopiedItemSchemaV2: VersionedSchema {
     static var versionIdentifier: Schema.Version = .init(2, 0, 0)
     static var models: [any PersistentModel.Type] {
-        return [CopiedItem.self]
+        [CopiedItem.self]
     }
 
     @Model
@@ -84,7 +84,7 @@ enum CopiedItemSchemaV2: VersionedSchema {
         var uid: String = "00000000-0000-0000-0000-000000000000"
         var title: String = ""
         var type: String = ""
-        var timestamp: Date = Date.init(timeIntervalSince1970: .zero)
+        var timestamp: Date = Date(timeIntervalSince1970: .zero)
 
         var content: String = ""
         @Attribute(.externalStorage)
@@ -125,12 +125,11 @@ enum CopiedItemSchemaV2: VersionedSchema {
         }
     }
 }
-
 
 enum CopiedItemSchemaV3: VersionedSchema {
     static var versionIdentifier: Schema.Version = .init(3, 0, 0)
     static var models: [any PersistentModel.Type] {
-        return [CopiedItem.self]
+        [CopiedItem.self]
     }
 
     @Model
@@ -138,7 +137,7 @@ enum CopiedItemSchemaV3: VersionedSchema {
         var uid: String = "00000000-0000-0000-0000-000000000000"
         var title: String = ""
         var type: String = ""
-        var timestamp: Date = Date.init(timeIntervalSince1970: .zero)
+        var timestamp: Date = Date(timeIntervalSince1970: .zero)
 
         var content: String = ""
         @Attribute(.externalStorage)
@@ -183,7 +182,6 @@ enum CopiedItemSchemaV3: VersionedSchema {
         }
     }
 }
-
 
 enum CopiedItemsMigrationPlan: SchemaMigrationPlan {
     static var schemas: [any VersionedSchema.Type] {
@@ -192,7 +190,7 @@ enum CopiedItemsMigrationPlan: SchemaMigrationPlan {
 
     static var stages: [MigrationStage] {
         [
-//            V1__V2,
+            //            V1__V2,
 //            V2__V3
         ]
     }
@@ -200,7 +198,7 @@ enum CopiedItemsMigrationPlan: SchemaMigrationPlan {
     static let V1__V1_5 = MigrationStage.custom(
         fromVersion: CopiedItemSchemaV1.self,
         toVersion: CopiedItemSchemaV2.self,
-        willMigrate: { context in
+        willMigrate: { _ in
 
         },
         didMigrate: { context in
@@ -213,13 +211,19 @@ enum CopiedItemsMigrationPlan: SchemaMigrationPlan {
         }
     )
 
-    static let V1__V2 = MigrationStage.lightweight(fromVersion: CopiedItemSchemaV1.self, toVersion: CopiedItemSchemaV2.self)
-    static let V2__V3 = MigrationStage.lightweight(fromVersion: CopiedItemSchemaV2.self, toVersion: CopiedItemSchemaV3.self)
+    static let V1__V2 = MigrationStage.lightweight(
+        fromVersion: CopiedItemSchemaV1.self,
+        toVersion: CopiedItemSchemaV2.self
+    )
+    static let V2__V3 = MigrationStage.lightweight(
+        fromVersion: CopiedItemSchemaV2.self,
+        toVersion: CopiedItemSchemaV3.self
+    )
 //    static let V2__v3 = MigrationStage.custom(
 //        fromVersion: CopiedItemSchemaV2.self,
 //        toVersion: CopiedItemSchemaV3.self,
 //        willMigrate: { context in
-//            
+//
 //        },
 //        didMigrate: { context in
 //            let copieditems = try context.fetch(FetchDescriptor<CopiedItemSchemaV1_5.CopiedItem>())

@@ -10,3 +10,5 @@
 --stripunusedargs closure-only
 --wraparguments before-first
 --wrapcollections before-first
+
+--disable redundantType

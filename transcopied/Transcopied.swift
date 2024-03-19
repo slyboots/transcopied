@@ -1,5 +1,5 @@
 //
-//  TranscopiedApp.swift
+//  Transcopied.swift
 //  Transcopied
 //
 //  Created by Dakota Lorance on 11/26/23.
@@ -10,7 +10,7 @@ import SwiftUI
 
 @main
 struct Transcopied: App {
-    @State private var pbm: PBManager = PBManager()
+    @State private var pbm = PBManager()
 
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
@@ -52,9 +52,9 @@ struct Transcopied: App {
             .onSceneActivate {
                 // whenever the list view is shown
                 // if we have new stuff in clip
-                if self.pbm.canCopy {
+                if pbm.canCopy {
                     // then save the data from the clipboard for use later
-                    self.pbm.incomingBuffer = self.pbm.get()
+                    pbm.incomingBuffer = pbm.get()
                 }
             }
         }

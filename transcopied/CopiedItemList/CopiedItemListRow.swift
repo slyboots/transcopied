@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 struct ConditionalRowText: View {
     var main: String?
     var alt: String? = ""
@@ -36,25 +35,25 @@ struct CopiedItemRow: View {
     private var iconName: String
     private var iconColor: Color
 
-    private var bytefmt: ByteCountFormatter = ByteCountFormatter()
+    private var bytefmt = ByteCountFormatter()
 
     var body: some View {
         HStack(alignment: .center) {
-            GeometryReader { geometry in
+            GeometryReader { _ in
                 VStack {
                     HStack {
-                        Image(systemName: self.iconName)
+                        Image(systemName: iconName)
                             .resizable()
                             .scaledToFit()
-                            .foregroundStyle(self.iconColor)
+                            .foregroundStyle(iconColor)
                         Text(
                             !item.title.isEmpty
-                            ? item.title
-                            : (item.text)
+                                ? item.title
+                                : (item.text)
                         )
                         .truncationMode(.tail)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .underline(self.item.type.contains("url"))
+                        .underline(item.type.contains("url"))
                         //                    .foregroundStyle(.blue)
                     }
                     HStack {
@@ -72,14 +71,14 @@ struct CopiedItemRow: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .font(.footnote)
                     .foregroundStyle(.tertiary)
-                    
-                    if (self.item.type == "public.image") {
+
+                    if item.type == "public.image" {
                         HStack {
                             Text("Image Data: ")
                             Text(
-                                self.bytefmt.string(fromByteCount: Int64(item.content.count))
+                                bytefmt.string(fromByteCount: Int64(item.content.count))
                             )
-                            
+
 //                            Image(data: self.item.content)!
 //                                .resizable()
 //                                .clipped()
@@ -92,7 +91,6 @@ struct CopiedItemRow: View {
         }
     }
 
-    
     init(item: CopiedItem) {
         self.item = item
         switch item.type {
@@ -150,8 +148,7 @@ struct CopiedItemRow: View {
     }
 }
 
-
-//#Preview("Url Preview Row", traits: .sizeThatFitsLayout) {
+// #Preview("Url Preview Row", traits: .sizeThatFitsLayout) {
 //    Group {
 //        @State var exampleData: [CopiedItem] = [
 //            CopiedItem(
@@ -169,7 +166,7 @@ struct CopiedItemRow: View {
 //        ]
 //        List(exampleData) { item in
 //            @Bindable var item = item
-//            
+//
 //            CopiedItemRow(
 //                item: item
 //            )
@@ -178,5 +175,5 @@ struct CopiedItemRow: View {
 //        .listStyle(.automatic)
 //        .modelContainer(for: CopiedItem.self, inMemory: true)
 //    }
-//}
+// }
 //

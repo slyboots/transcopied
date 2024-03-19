@@ -68,7 +68,7 @@ struct CopiedItemList: View {
 
     init(searchText: String, searchScope: String) {
         let emptyScope = #Predicate<CopiedItem> { _ in
-            return searchScope.isEmpty
+            searchScope.isEmpty
         }
         let matchesScope = #Predicate<CopiedItem> { item in
             item.type.localizedStandardContains(searchScope)

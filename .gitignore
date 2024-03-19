@@ -4,6 +4,8 @@
 
 ## User settings
 xcuserdata/
+BuildTools/.swiftpm
+BuildTools/.build
 
 ## Obj-C/Swift specific
 *.hmap

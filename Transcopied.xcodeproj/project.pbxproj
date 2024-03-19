@@ -145,6 +145,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1DFE67992B13168E000E36DA /* Build configuration list for PBXNativeTarget "Transcopied" */;
 			buildPhases = (
+				1D5046D52BA954FA00ED86BA /* ShellScript */,
 				1DFE67852B13168D000E36DA /* Sources */,
 				1DFE67862B13168D000E36DA /* Frameworks */,
 				1DFE67872B13168D000E36DA /* Resources */,
@@ -210,6 +211,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1D5046D52BA954FA00ED86BA /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [[ \"$(uname -m)\" == arm64 ]]; then\n    export PATH=\"/opt/homebrew/bin:$PATH\"\nfi\n\nif which swiftformat > /dev/null; then\n  swiftformat --swiftversion 5.0 --lint --lenient \"${SRCROOT}\"\nelse\n  echo \"warning: SwiftFormat not installed, download from https://github.com/nicklockwood/SwiftFormat\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		1DFE67852B13168D000E36DA /* Sources */ = {

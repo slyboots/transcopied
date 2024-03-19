@@ -86,8 +86,34 @@ class PBManager {
         return board.value(forPasteboardType: "public.content")
     }
 
-    func set(data: [String: Any]) {
-        board.setItems([data])
+    func set(_ data: Any, type: String) {
+        switch type {
+            case PasteboardContentType.text.rawValue:
+                board.setValue(data, forPasteboardType: type)
+            case PasteboardContentType.url.rawValue:
+                board.setValue(data, forPasteboardType: type)
+            case PasteboardContentType.image.rawValue:
+                board.setValue(data, forPasteboardType: type)
+            case PasteboardContentType.file.rawValue:
+                board.setValue(data, forPasteboardType: type)
+            default:
+                board.setValue(data, forPasteboardType: UIPasteboard.typeAutomatic)
+        }
+    }
+
+    func set(_ data: CopiedItem) {
+        switch data.type {
+            case PasteboardContentType.text.rawValue:
+                board.setValue(data.content, forPasteboardType: data.type)
+            case PasteboardContentType.url.rawValue:
+                board.setValue(data.content, forPasteboardType: data.type)
+            case PasteboardContentType.image.rawValue:
+                board.setValue(data.data, forPasteboardType: data.type)
+            case PasteboardContentType.file.rawValue:
+                board.setValue(data.data, forPasteboardType: data.type)
+            default:
+                board.setValue(data.content.isEmpty ? data.data : data.content, forPasteboardType: UIPasteboard.typeAutomatic)
+        }
     }
 }
 

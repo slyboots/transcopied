@@ -18,6 +18,7 @@ struct CopiedEditorView: View {
 
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Environment(\.modelContext) private var modelContext
+    @Environment(PBManager.self) private var pbm
     @Bindable var item: CopiedItem
 
     @FocusState private var editorFocused: EditorFocused?
@@ -54,23 +55,19 @@ struct CopiedEditorView: View {
                 case "public.url":
                     VStack {
                         LinkPresentationView(url: item.url)
-                            .maxHeight(50)
-                        TextEditor(text: $item.url.stringBinding)
-                            .padding()
+                            .maxHeight(75)
+                        TextEditor(text: $item.content)
                             .foregroundStyle(.primary)
                             .focused($editorFocused, equals: .content)
                             .onChange(of: editorFocused) {
                                 bottomBarPlacement = editorFocused != nil ? .keyboard : .bottomBar
                             }
-                        Spacer()
                     }
                 case "public.image":
                     VStack {
                         Image(data: item.data)!
-                            .resizable(true)
+                            .resizable()
                             .scaledToFit()
-                            .fill(alignment: .center)
-                            .padding()
                         Spacer()
                     }
 
@@ -147,7 +144,13 @@ struct CopiedEditorView: View {
     }
 
     private func setClipboard() {
-        UIPasteboard.general.setValue(item.content, forPasteboardType: UTType.plainText.identifier)
+        let binaryTypes = [PasteboardContentType.image.rawValue, PasteboardContentType.file.rawValue]
+        if binaryTypes.contains([item.type]) {
+            pbm.set(item.data, type: item.type)
+        }
+        else {
+            pbm.set(item.content, type: item.type)
+        }
     }
 }
 
@@ -160,6 +163,7 @@ struct CopiedEditorView: View {
             timestamp: Date()
         )
     )
+    .pasteboardContext()
     .modelContainer(for: CopiedItem.self, inMemory: true)
 }
 
@@ -172,6 +176,7 @@ struct CopiedEditorView: View {
             timestamp: Date()
         )
     )
+    .pasteboardContext()
     .modelContainer(for: CopiedItem.self, inMemory: true)
 }
 
@@ -184,29 +189,32 @@ struct CopiedEditorView: View {
             timestamp: Date()
         )
     )
+    .pasteboardContext()
     .modelContainer(for: CopiedItem.self, inMemory: true)
 }
 
 #Preview("Image Clip with Title") {
     CopiedEditorView(
         item: CopiedItem(
-            content: "Testing 123",
-            type: PasteboardContentType.text,
-            title: "Preview Content",
+            content: UIImage(systemName: "info.circle")!,
+            type: PasteboardContentType.image,
+            title: "Title",
             timestamp: Date()
         )
     )
+    .pasteboardContext()
     .modelContainer(for: CopiedItem.self, inMemory: true)
 }
 
 #Preview("Image Clip no Title") {
     CopiedEditorView(
         item: CopiedItem(
-            content: "Testing 123",
-            type: PasteboardContentType.text,
-            title: "Preview Content",
+            content: UIImage(systemName: "clock")!,
+            type: PasteboardContentType.image,
+            title: "",
             timestamp: Date()
         )
     )
+    .pasteboardContext()
     .modelContainer(for: CopiedItem.self, inMemory: true)
 }

@@ -49,6 +49,14 @@ struct Transcopied: App {
                 CopiedItemListContainer()
             }
             .pasteboardContext()
+            .onPasteboardContent {
+                // whenever the list view is shown
+                // if we have new stuff in clip
+                if pbm.canCopy {
+                    // then save the data from the clipboard for use later
+                    pbm.incomingBuffer = pbm.get()
+                }
+            }
             .onSceneActivate {
                 // whenever the list view is shown
                 // if we have new stuff in clip

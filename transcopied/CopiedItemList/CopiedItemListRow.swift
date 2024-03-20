@@ -96,6 +96,7 @@ struct CopiedItemRow: View {
                         .squareFrame()
                         .maxWidth(50)
                         .maxHeight(50)
+                        .allowsHitTesting(false)
                 }
             }
         }
@@ -196,13 +197,13 @@ struct CopiedItemRow: View {
     Group {
         @State var exampleData: [CopiedItem] = [
             CopiedItem(
-                content: UIImage(systemName: "person.text.rectangle.fill"),
+                content: UIImage(systemName: "person.text.rectangle.fill")!,
                 type: .image,
                 title: "",
                 timestamp: Date(timeIntervalSince1970: .zero)
             ),
             CopiedItem(
-                content: UIImage(systemName: "clock"),
+                content: UIImage(systemName: "clock")!,
                 type: .image,
                 title: "Image with a title",
                 timestamp: Date(timeIntervalSince1970: .zero)

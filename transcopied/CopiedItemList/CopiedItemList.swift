@@ -11,10 +11,12 @@ import SwiftUI
 struct CopiedItemList: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(PBManager.self) private var pbm
+    @Environment(\.editMode) private var editMode
     @Query private var items: [CopiedItem]
+    @State private var selection = Set<PersistentIdentifier>()
 
     var body: some View {
-        List {
+        List(selection: $selection) {
             ForEach(items) { item in
                 NavigationLink {
                     CopiedEditorView(item: item)
@@ -22,24 +24,40 @@ struct CopiedItemList: View {
                     CopiedItemRow(item: item)
                 }
                 .foregroundStyle(.primary)
+                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                    Button(role: .destructive) {
+                        deleteItem(item)
+                    } label: {
+                        Label("Delete", systemImage: "trash")
+                    }
+                }
+                .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                    Button() {
+                        pbm.set(item)
+                    } label: {
+                        Label("Copy", systemImage: "arrow.up.doc.on.clipboard")
+                            .tint(.green)
+                    }
+                }
             }
-            .onDelete(perform: deleteItems)
         }
         .onAppear(perform: { addItem() })
         .navigationTitle("Clippings")
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItemGroup(placement: .topBarTrailing) {
+                if editMode?.wrappedValue.isEditing == true {
+                    Button(role: .destructive, action: deleteSelection) {
+                        Label("Delete Clippings", systemImage: "trash")
+                    }
+                    .tint(Color.red)
+                }
                 EditButton().padding(.trailing)
             }
-            ToolbarItem {
-                Button(action: addItem) {
-                    Label("Add Clipping", systemImage: "plus")
-                }
-            }
         }
+        .animation(nil, value: editMode?.wrappedValue)
         .toolbar {
             ToolbarItemGroup(placement: .bottomBar) {
-                Button("Paste", systemImage: "square.and.arrow.down", action: addItem)
+                Button("Paste", systemImage: "square.and.arrow.up", action: addItem)
                     .accessibilityLabel("Add Clipping")
                 Spacer()
                 Spacer()
@@ -110,8 +128,7 @@ struct CopiedItemList: View {
             )
             do {
                 try newItem.save(context: modelContext)
-            }
-            catch _ {
+            } catch _ {
                 return
             }
         }
@@ -124,6 +141,26 @@ struct CopiedItemList: View {
             }
         }
     }
+    private func deleteSelection() {
+        withAnimation {
+            for id in selection {
+                do {
+                    try modelContext.delete(model: CopiedItem.self, where: #Predicate<CopiedItem>{
+                        $0.persistentModelID == id
+                    })
+                } catch {
+                    print(selection)
+                }
+            }
+        }
+        self.editMode?.wrappedValue.toggle()
+    }
+
+    private func deleteItem(_ item: CopiedItem) {
+        withAnimation {
+            modelContext.delete(item)
+        }
+    }
 }
 
 enum ContentTypeFilter: String {
@@ -132,7 +169,7 @@ enum ContentTypeFilter: String {
     case image = "public.image"
     case file = "public.content"
     case any = ""
-    var id: String { return "\(self)" }
+    var id: String { "\(self)" }
 }
 
 struct CopiedItemListContainer: View {
@@ -154,9 +191,52 @@ struct CopiedItemListContainer: View {
 }
 
 #Preview {
-    NavigationStack {
-        CopiedItemListContainer()
+    Group {
+        @State var exampleData: [CopiedItem] = [
+            CopiedItem(
+                content: "Test Just Text. Alot of text. Like a LOOOOOOOOOOOOOOOOOOOOOO00000000000000000000000000000T",
+                type: .text,
+                timestamp: nil
+            ),
+            CopiedItem(content: "Empty title falls back to content", type: .text, title: "TITLE", timestamp: nil),
+            CopiedItem(
+                content: "Test Text With Title And Timestamp",
+                type: .text,
+                title: "TITLE",
+                timestamp: Date(timeIntervalSince1970: .zero)
+            ),
+            CopiedItem(
+                content: "iuweghcdiouwgcoewudgsddddddddddddddddddddddddddddddddddddddsdddddddddddddddddddddddddddddddddddddddddddchoewudchoewudchoecwidhcduwhcouwdhcoudwhcowudhcoh",
+                type: .text,
+                title: "",
+                timestamp: Date()
+            ),
+            CopiedItem(
+                content: URL(string: "https://google.com")!,
+                type: .url,
+                timestamp: Date(timeIntervalSinceNow: -10000)
+            ),
+            CopiedItem(content: URL(string: "file:///tmp/test/owufhcowhcouwehdcouhedouchweoduhouhdcwdeo")!, type: .url, timestamp: nil),
+            CopiedItem(
+                content: URL(string: "https://areally.long.url/?q=123idhwiue")!,
+                type: .url,
+                title: "URL with a title",
+                timestamp: Date(timeIntervalSince1970: .zero)
+            ),
+        ]
+        NavigationStack {
+            CopiedItemListContainer()
+        }
+        .pasteboardContext()
+        .modelContainer(for: CopiedItem.self, inMemory: true, onSetup: { mc in
+            do {
+                let ctx = try mc.get()
+                try exampleData.forEach { item in
+                    try item.save(context: ctx.mainContext)
+                }
+            } catch {
+                return
+            }
+        })
     }
-    .pasteboardContext()
-    .modelContainer(for: CopiedItem.self, inMemory: true)
 }

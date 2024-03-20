@@ -101,7 +101,7 @@ struct CopiedEditorView: View {
                     setClipboard()
                     copiedHapticTriggered.toggle()
                 }, label: {
-                    Label("Copy", systemImage: "square.and.arrow.down.on.square")
+                    Label("Copy", systemImage: "square.and.arrow.up.on.square")
                         .sensoryFeedback(.success, trigger: copiedHapticTriggered)
                 })
                 Spacer()

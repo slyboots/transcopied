@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct AppDetails: View {
-    @AppStorage("support") private var support: URL = URL(string: "mailto:transcopied@dwl.dev")!
-    @AppStorage("project") private var project: URL = URL(string: "https://github.com/slyboots/transcopied")!
-    @AppStorage("privacy") private var privacy: URL = URL(string: "https://transcopied.dwl.dev/privacy")!
+    @AppStorage("support") private var support = URL(string: "mailto:transcopied@dwl.dev")!
+    @AppStorage("project") private var project = URL(string: "https://github.com/slyboots/transcopied")!
+    @AppStorage("privacy") private var privacy = URL(string: "https://transcopied.dwl.dev/privacy")!
 
     var body: some View {
         List {

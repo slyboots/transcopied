@@ -1,0 +1,14 @@
+--binarygrouping none
+--decimalgrouping none
+--elseposition next-line
+--hexgrouping none
+--ifdef outdent
+--indentcase true
+--octalgrouping none
+--self init-only
+--semicolons never
+--stripunusedargs closure-only
+--wraparguments before-first
+--wrapcollections before-first
+
+--disable redundantType

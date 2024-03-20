@@ -15,6 +15,7 @@
 		1D8346862B1415AB004ACF46 /* CopiedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D8346852B1415AB004ACF46 /* CopiedItem.swift */; };
 		1D8B72D92B9EA6B30028D7D4 /* CompoundPredicate in Frameworks */ = {isa = PBXBuildFile; productRef = 1D8B72D82B9EA6B30028D7D4 /* CompoundPredicate */; };
 		1D95123D2BA1AFA7009AD8B6 /* CopiedItemList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DFE678E2B13168D000E36DA /* CopiedItemList.swift */; };
+		1DAB74972BAA634D003A591F /* Debugging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DAB74962BAA634D003A591F /* Debugging.swift */; };
 		1DBC765B2B1F5FA6004B1261 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1DFE67922B13168E000E36DA /* Assets.xcassets */; };
 		1DBC765F2B20BAB2004B1261 /* PBManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DBC765E2B20BAB2004B1261 /* PBManager.swift */; };
 		1DD331C92B19846400708F46 /* ModalMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DD331C82B19846400708F46 /* ModalMessage.swift */; };
@@ -29,6 +30,7 @@
 		1D17E8312B779DEC002FE8E7 /* Activitea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Activitea.swift; sourceTree = "<group>"; };
 		1D4BCFD62B1AD79C00E10186 /* AppDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDetails.swift; sourceTree = "<group>"; };
 		1D8346852B1415AB004ACF46 /* CopiedItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopiedItem.swift; sourceTree = "<group>"; };
+		1DAB74962BAA634D003A591F /* Debugging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Debugging.swift; sourceTree = "<group>"; };
 		1DBC765D2B20040B004B1261 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		1DBC765E2B20BAB2004B1261 /* PBManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PBManager.swift; sourceTree = "<group>"; };
 		1DD331BB2B1828CE00708F46 /* SwiftData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftData.framework; path = System/Library/Frameworks/SwiftData.framework; sourceTree = SDKROOT; };
@@ -78,6 +80,14 @@
 			path = CopiedItemList;
 			sourceTree = "<group>";
 		};
+		1DAB74952BAA6316003A591F /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				1DAB74962BAA634D003A591F /* Debugging.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
 		1DD331BA2B1828CE00708F46 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -115,6 +125,7 @@
 		1DFE678B2B13168D000E36DA /* transcopied */ = {
 			isa = PBXGroup;
 			children = (
+				1DAB74952BAA6316003A591F /* Utils */,
 				1D086B952B948394004939CD /* CopiedItemList */,
 				1D086B912B946169004939CD /* Migrations */,
 				1DFE678C2B13168D000E36DA /* Transcopied.swift */,
@@ -242,6 +253,7 @@
 				1D4BCFD72B1AD79C00E10186 /* AppDetails.swift in Sources */,
 				1DF36DD72B16EDC80037FA6A /* CopiedEditorView.swift in Sources */,
 				1D8346862B1415AB004ACF46 /* CopiedItem.swift in Sources */,
+				1DAB74972BAA634D003A591F /* Debugging.swift in Sources */,
 				1D086B972B9483F0004939CD /* CopiedItemListRow.swift in Sources */,
 				1D95123D2BA1AFA7009AD8B6 /* CopiedItemList.swift in Sources */,
 				1D086B932B9461E8004939CD /* CopiedItemVersions.swift in Sources */,

@@ -39,15 +39,19 @@ struct CopiedItemRow: View {
     private var bytefmt = ByteCountFormatter()
 
     var body: some View {
-        HStack(alignment: .top ) {
-            Image(systemName: iconName)
-                .foregroundStyle(Color.accent)
-                .alignmentGuide(.lastTextBaseline)
+        HStack(alignment:.top, spacing: 0) {
+            VStack(){
+                Image(systemName: iconName)
+                    .foregroundStyle(Color.accent)
+                    .padding(.vertical, .extraSmall)
+            }
             VStack(alignment: .leading) {
                 if !item.title.isEmpty {
                     Text(item.title)
                         .lineLimit(1)
                         .truncationMode(.tail)
+                        .padding(0)
+                        .contentMargins(0)
                 }
                 if ["public.url", "public.plain-text"].contains([item.type]) {
                     Text(item.content)
@@ -61,6 +65,7 @@ struct CopiedItemRow: View {
                         .frame(maxHeight:80)
                         .clipped()
                 }
+                Spacer()
                 HStack() {
                     if !item.text.isEmpty {
                         HStack(spacing:0) {
@@ -84,10 +89,14 @@ struct CopiedItemRow: View {
                 .foregroundStyle(.tertiary)
             }
             if item.type == "public.url" {
+                // TODO: Move this to be under the URL with the URL font size set smaller
                 Spacer()
-                LinkPresentationView(url: item.url)
-                    .maxWidth(50)
-                    .clipped()
+                VStack {
+                    LinkPresentationView(url: item.url)
+                        .squareFrame()
+                        .maxWidth(50)
+                        .maxHeight(50)
+                }
             }
         }
     }

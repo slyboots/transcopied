@@ -26,6 +26,8 @@
 		1DAB74C42BB8C81B003A591F /* Toolbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DAB74C32BB8C81B003A591F /* Toolbox.swift */; };
 		1DAB74CC2BB8EC2E003A591F /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DAB74CB2BB8EC2E003A591F /* KeyboardViewController.swift */; };
 		1DAB74D02BB8EC2E003A591F /* keeb.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1DAB74C92BB8EC2E003A591F /* keeb.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		1DAB74D62BB978E6003A591F /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 1DAB74D52BB978E6003A591F /* ComposableArchitecture */; };
+		1DAB74DB2BB990CE003A591F /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DAB74DA2BB990CE003A591F /* Package.swift */; };
 		1DBC765B2B1F5FA6004B1261 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1DFE67922B13168E000E36DA /* Assets.xcassets */; };
 		1DBC765F2B20BAB2004B1261 /* PBManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DBC765E2B20BAB2004B1261 /* PBManager.swift */; };
 		1DD331C92B19846400708F46 /* ModalMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DD331C82B19846400708F46 /* ModalMessage.swift */; };
@@ -104,6 +106,7 @@
 		1DAB74C92BB8EC2E003A591F /* keeb.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = keeb.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DAB74CB2BB8EC2E003A591F /* KeyboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardViewController.swift; sourceTree = "<group>"; };
 		1DAB74CD2BB8EC2E003A591F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1DAB74DA2BB990CE003A591F /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		1DBC765D2B20040B004B1261 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		1DBC765E2B20BAB2004B1261 /* PBManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PBManager.swift; sourceTree = "<group>"; };
 		1DD331BB2B1828CE00708F46 /* SwiftData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftData.framework; path = System/Library/Frameworks/SwiftData.framework; sourceTree = SDKROOT; };
@@ -152,6 +155,7 @@
 			files = (
 				1D086B992B95340F004939CD /* SwiftUIX in Frameworks */,
 				1D8B72D92B9EA6B30028D7D4 /* CompoundPredicate in Frameworks */,
+				1DAB74D62BB978E6003A591F /* ComposableArchitecture in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -211,6 +215,21 @@
 			path = keeb;
 			sourceTree = "<group>";
 		};
+		1DAB74D92BB99014003A591F /* pbmanager */ = {
+			isa = PBXGroup;
+			children = (
+				1DAB74DA2BB990CE003A591F /* Package.swift */,
+			);
+			path = pbmanager;
+			sourceTree = "<group>";
+		};
+		1DAB74DC2BB9916B003A591F /* transcopiedlib */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = transcopiedlib;
+			sourceTree = "<group>";
+		};
 		1DD331BA2B1828CE00708F46 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -227,11 +246,12 @@
 		1DFE67802B13168D000E36DA = {
 			isa = PBXGroup;
 			children = (
+				1DAB74DC2BB9916B003A591F /* transcopiedlib */,
+				1DFE678B2B13168D000E36DA /* App */,
 				1DF36DDA2B178A890037FA6A /* TranscopiedDebug.entitlements */,
 				1DF36DD92B17899F0037FA6A /* TranscopiedRelease.entitlements */,
 				1DF36DD82B17881E0037FA6A /* Transcopied-Info.plist */,
 				1DBC765D2B20040B004B1261 /* README.md */,
-				1DFE678B2B13168D000E36DA /* transcopied */,
 				1DAB749D2BAA98AC003A591F /* transporter */,
 				1DAB74B22BAAB3D1003A591F /* dispatch */,
 				1DAB74CA2BB8EC2E003A591F /* keeb */,
@@ -252,9 +272,10 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		1DFE678B2B13168D000E36DA /* transcopied */ = {
+		1DFE678B2B13168D000E36DA /* App */ = {
 			isa = PBXGroup;
 			children = (
+				1DAB74D92BB99014003A591F /* pbmanager */,
 				1DAB74952BAA6316003A591F /* Utils */,
 				1D086B952B948394004939CD /* CopiedItemList */,
 				1D086B912B946169004939CD /* Migrations */,
@@ -269,7 +290,7 @@
 				1D17E8312B779DEC002FE8E7 /* Activitea.swift */,
 				1DAB74C32BB8C81B003A591F /* Toolbox.swift */,
 			);
-			path = transcopied;
+			path = App;
 			sourceTree = "<group>";
 		};
 		1DFE67942B13168E000E36DA /* Preview Content */ = {
@@ -356,6 +377,7 @@
 			packageProductDependencies = (
 				1D086B982B95340F004939CD /* SwiftUIX */,
 				1D8B72D82B9EA6B30028D7D4 /* CompoundPredicate */,
+				1DAB74D52BB978E6003A591F /* ComposableArchitecture */,
 			);
 			productName = nipper;
 			productReference = 1DFE67892B13168D000E36DA /* Transcopied.app */;
@@ -397,6 +419,7 @@
 			packageReferences = (
 				1D243AF62B7676AC002560F9 /* XCRemoteSwiftPackageReference "SwiftUIX" */,
 				1D8B72D72B9EA6B30028D7D4 /* XCRemoteSwiftPackageReference "CompoundPredicate" */,
+				1DAB74D42BB978E6003A591F /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
 			);
 			productRefGroup = 1DFE678A2B13168D000E36DA /* Products */;
 			projectDirPath = "";
@@ -506,6 +529,7 @@
 				1DBC765F2B20BAB2004B1261 /* PBManager.swift in Sources */,
 				1DFE678D2B13168D000E36DA /* Transcopied.swift in Sources */,
 				1DAB74C42BB8C81B003A591F /* Toolbox.swift in Sources */,
+				1DAB74DB2BB990CE003A591F /* Package.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -853,7 +877,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMPILER_INDEX_STORE_ENABLE = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"transcopied/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"App/Preview Content\"";
 				DEVELOPMENT_TEAM = V6MX2ZRT2L;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -894,7 +918,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMPILER_INDEX_STORE_ENABLE = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"transcopied/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"App/Preview Content\"";
 				DEVELOPMENT_TEAM = V6MX2ZRT2L;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -990,6 +1014,14 @@
 				minimumVersion = 0.1.0;
 			};
 		};
+		1DAB74D42BB978E6003A591F /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.9.2;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1002,6 +1034,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1D8B72D72B9EA6B30028D7D4 /* XCRemoteSwiftPackageReference "CompoundPredicate" */;
 			productName = CompoundPredicate;
+		};
+		1DAB74D52BB978E6003A591F /* ComposableArchitecture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1DAB74D42BB978E6003A591F /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			productName = ComposableArchitecture;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

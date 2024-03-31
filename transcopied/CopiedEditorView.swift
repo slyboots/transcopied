@@ -70,7 +70,14 @@ struct CopiedEditorView: View {
                             .scaledToFit()
                         Spacer()
                     }
-
+                case "public.content":
+                    VStack {
+                        Text("Editing binary data is unsupported!")
+                            .font(.headline)
+                        Text("Add a title above to help you remember what this item contains")
+                            .font(.subheadline)
+                        Spacer()
+                    }
                 default:
                     Spacer()
                     EmptyView()

@@ -49,20 +49,21 @@ struct Transcopied: App {
                 CopiedItemListContainer()
             }
             .pasteboardContext()
-            .onPasteboardContent {
-                // whenever the list view is shown
-                // if we have new stuff in clip
-                if pbm.canCopy {
-                    // then save the data from the clipboard for use later
-                    pbm.incomingBuffer = pbm.get()
+//            .onPasteboardContent {
+//                withAnimation {
+//                    // whenever the list view is shown if we have new stuff in clip
+//                    // then save the data from the clipboard for use later
+//                    Toolbox.saveClipboard(pbm: pbm, modelContext: sharedModelContainer.mainContext)
+//                }
+//            }
+            .onAppear(perform: {
+                withAnimation {
+                    Toolbox.saveClipboard(pbm: pbm, modelContext: sharedModelContainer.mainContext)
                 }
-            }
+            })
             .onSceneActivate {
-                // whenever the list view is shown
-                // if we have new stuff in clip
-                if pbm.canCopy {
-                    // then save the data from the clipboard for use later
-                    pbm.incomingBuffer = pbm.get()
+                withAnimation {
+                    Toolbox.saveClipboard(pbm: pbm, modelContext: sharedModelContainer.mainContext)
                 }
             }
         }

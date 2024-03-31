@@ -24,8 +24,8 @@ public enum PasteType: String, CaseIterable {
 
 @Observable
 class PBManager {
-    var incomingBuffer: Any?
-    var changes: Int = 0
+//    var incomingBuffer: Any?
+//    var changes: Int = 0
     private var board: UIPasteboard = UIPasteboard.general
 
     var canCopy: Bool {
@@ -70,7 +70,7 @@ class PBManager {
             return nil
         }
 
-        changes = board.changeCount
+//        changes = board.changeCount
         if let url = board.url {
             return url
         }
@@ -193,22 +193,22 @@ public extension View {
     }
 }
 
-extension UIPasteboard {
-    var hasContent: Bool {
-        numberOfItems > 0 && contains(pasteboardTypes: PasteType.allCases.map(\.rawValue))
-    }
-
-    var hasContentPublisher: AnyPublisher<Bool, Never> {
-        Just(hasContent)
-            .merge(
-                with: NotificationCenter.default
-                    .publisher(for: UIPasteboard.changedNotification, object: self)
-                    .map { _ in self.hasContent }
-            )
-//            .merge(
-//                with: NotificationCenter.default
-//                    .publisher(for: UIApplication.didBecomeActiveNotification, object: nil)
-//                    .map { _ in self.hasContent })
-            .eraseToAnyPublisher()
-    }
-}
+//extension UIPasteboard {
+//    var hasContent: Bool {
+//        numberOfItems > 0 && contains(pasteboardTypes: PasteType.allCases.map(\.rawValue))
+//    }
+//
+////    var hasContentPublisher: AnyPublisher<Bool, Never> {
+////        Just(hasContent)
+////            .merge(
+////                with: NotificationCenter.default
+////                    .publisher(for: UIPasteboard.changedNotification, object: self)
+////                    .map { _ in self.hasContent }
+////            )
+//////            .merge(
+//////                with: NotificationCenter.default
+//////                    .publisher(for: UIApplication.didBecomeActiveNotification, object: nil)
+//////                    .map { _ in self.hasContent })
+////            .eraseToAnyPublisher()
+////    }
+//}

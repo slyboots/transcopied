@@ -53,6 +53,15 @@ struct CopiedItemRow: View {
                         .padding(0)
                         .contentMargins(0)
                 }
+                else {
+                    if item.type == "public.content" {
+                        Text("File Data")
+                            .lineLimit(1)
+                            .truncationMode(.tail)
+                            .padding(0)
+                            .contentMargins(0)
+                    }
+                }
                 if ["public.url", "public.plain-text"].contains([item.type]) {
                     Text(item.content)
                         .lineLimit(5)
@@ -64,6 +73,12 @@ struct CopiedItemRow: View {
                         .aspectRatio(contentMode: .fill)
                         .frame(maxHeight:80)
                         .clipped()
+                }
+                if item.type == "public.content" {
+                    Text("...")
+                        .lineLimit(5)
+                        .truncationMode(.tail)
+                    
                 }
                 Spacer()
                 HStack() {
@@ -77,6 +92,11 @@ struct CopiedItemRow: View {
                     if item.image != nil {
                         HStack {
                             Text("PNG "+item.image!.size.width.formatted()+"x"+item.image!.size.height.formatted())
+                        }
+                    }
+                    if item.type == "public.content" {
+                        HStack {
+                            Text("DATA \(Double(item.file!.count) / (1024.0*1024.0))MB")
                         }
                     }
                     HStack(spacing:0) {

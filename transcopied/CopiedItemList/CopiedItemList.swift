@@ -41,7 +41,9 @@ struct CopiedItemList: View {
                 }
             }
         }
-        .onAppear(perform: { addItem() })
+        .onAppear(perform: {
+            Toolbox.saveClipboard(pbm: pbm, modelContext: modelContext)
+        })
         .navigationTitle("Clippings")
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {

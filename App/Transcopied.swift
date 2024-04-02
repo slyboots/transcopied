@@ -7,66 +7,58 @@
 
 import SwiftData
 import SwiftUI
+import ComposableArchitecture
+import Dependencies
+
 
 @main
 struct Transcopied: App {
-    @State private var pbm = PBManager()
+    @Dependency(\.databaseService) var databaseService
 
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            CopiedItem.self,
-        ])
-#if DEBUG
-        let modelConfiguration = ModelConfiguration(
-            schema: schema,
-            isStoredInMemoryOnly: false,
-            allowsSave: true,
-            cloudKitDatabase: ModelConfiguration.CloudKitDatabase.private("iCloud.transcopied.dev.1")
-        )
-#else
-        let modelConfiguration = ModelConfiguration(
-            schema: schema,
-            isStoredInMemoryOnly: false,
-            allowsSave: true,
-            cloudKitDatabase: ModelConfiguration.CloudKitDatabase.private("iCloud.transcopied.prod")
-        )
-#endif
-        do {
-            return try ModelContainer(
-                for: schema,
-//                migrationPlan: CopiedItemsMigrationPlan.self,
-                configurations: [modelConfiguration]
-            )
-        }
-        catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
+    @State private var pbm = PBManager()
 
     var body: some Scene {
         WindowGroup {
-            NavigationStack {
-                CopiedItemListContainer()
-            }
-            .pasteboardContext()
-//            .onPasteboardContent {
+            AppContainerView(store: .init(initialState: AppContainerFeature.State(), reducer: {
+                AppContainerFeature()
+                    ._printChanges()
+            }))
+            // ClipEditorView(store: .init(initialState: ClipEditorFeature.State(), reducer: {ClipEditorFeature()._printChanges()}
+            // CopiedItemListContainer()
+        }
+        .modelContainer(databaseService.container())
+//            .pasteboardContext()
+////            .onPasteboardContent {
+////                withAnimation {
+////                    // whenever the list view is shown if we have new stuff in clip
+////                    // then save the data from the clipboard for use later
+////                    Toolbox.saveClipboard(pbm: pbm, modelContext: sharedModelContainer.mainContext)
+////                }
+////            }
+//            .onAppear(perform: {
 //                withAnimation {
-//                    // whenever the list view is shown if we have new stuff in clip
-//                    // then save the data from the clipboard for use later
+//                    Toolbox.saveClipboard(pbm: pbm, modelContext: sharedModelContainer.mainContext)
+//                }
+//            })
+//            .onSceneActivate {
+//                withAnimation {
 //                    Toolbox.saveClipboard(pbm: pbm, modelContext: sharedModelContainer.mainContext)
 //                }
 //            }
-            .onAppear(perform: {
-                withAnimation {
-                    Toolbox.saveClipboard(pbm: pbm, modelContext: sharedModelContainer.mainContext)
-                }
-            })
-            .onSceneActivate {
-                withAnimation {
-                    Toolbox.saveClipboard(pbm: pbm, modelContext: sharedModelContainer.mainContext)
-                }
-            }
-        }
-        .modelContainer(sharedModelContainer)
+//        }
+//        .modelContainer(sharedModelContainer)
+    }
+}
+
+
+#Preview {
+    Group {
+        @Dependency(\.databaseService) var databaseService
+        let container = databaseService.container()
+        AppContainerView(store: .init(initialState: AppContainerFeature.State(), reducer: {
+                AppContainerFeature()
+                    ._printChanges()
+        }))
+        .modelContainer(container)
     }
 }

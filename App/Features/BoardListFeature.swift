@@ -14,8 +14,8 @@ import SwiftUI
 struct BoardListFeature {
     @ObservableState
     struct State: Equatable {
-        var boards: [String]
-        var selectedBoard: String
+        var boards: [String] = []
+        var selectedBoard: String? = nil
     }
 
     enum Action: Equatable {
@@ -37,14 +37,69 @@ struct BoardListView: View {
     let store: StoreOf<BoardListFeature>
 
     var body: some View {
-        EmptyView()
+        List() {
+            Section {
+                LabeledContent {Text("0").tint(.secondary)} label: {
+                    Label("Copied", systemImage: "clipboard")
+                }
+                .listRowSeparator(.hidden)
+                //                .onTapGesture {
+                //                    viewStore.send(.boardListRowTapped(board))
+                //                }
+            }
+            Section {
+                ForEach(enumerating: ["Blah"]) { board in
+                    LabeledContent {
+                        Text("0")
+                            .tint(.secondary)
+                    } label: {
+                        Label(board, systemImage: "line.3.horizontal.circle.fill")
+                    }
+                    .listRowSeparator(.hidden)
+                }
+                .listSectionSeparator(/*@START_MENU_TOKEN@*/.visible/*@END_MENU_TOKEN@*/)
+            }
+            Section {
+                LabeledContent {EmptyView()} label: {
+                    Label("Trash", systemImage: "trash").foregroundStyle(.red)
+                }
+                LabeledContent {EmptyView()} label: {
+                    Label("Settings", systemImage: "slider.horizontal.3")
+                }
+                .listSectionSpacing(.compact)
+                .listRowSeparator(.hidden)
+            }
+        }
+        .listSectionSpacing(ListSectionSpacing.custom(20.0))
+        .listStyle(.plain)
+//        WithViewStore(store, observe: {$0}) {viewStore in
+//            List() {
+//                ForEach(enumerating: viewStore.state.boards) { board in
+//                    LabeledContent {
+//                        Text(">")
+//                    } label: {
+//                        Label(board, systemImage: "clipboard")
+//                    }
+//                    .onTapGesture {
+//                        viewStore.send(.boardTapped(board))
+//                    }
+//                }
+//            }
+//            .listStyle(.inset)
+//        }
     }
 }
 
 #Preview {
-    BoardListView(
-        store: Store(initialState: BoardListFeature.State(boards: ["Clips"], selectedBoard: "Clips")) {
+    @Dependency(\.databaseService) var databaseService
+    return BoardListView(
+        store: Store(
+            initialState: BoardListFeature.State(
+                boards: ["Clips"],
+                selectedBoard: "Clips"
+            )) {
             BoardListFeature()
         }
     )
+    .modelContainer(databaseService.container())
 }

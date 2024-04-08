@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1D06AA1A2BC34F60008C8E05 /* BoardVersions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D06AA192BC34F60008C8E05 /* BoardVersions.swift */; };
+		1D06AA1C2BC363EA008C8E05 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D06AA1B2BC363EA008C8E05 /* Logging.swift */; };
+		1D06AA1E2BC37ACE008C8E05 /* ClipListFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D06AA1D2BC37ACE008C8E05 /* ClipListFeature.swift */; };
 		1D086B932B9461E8004939CD /* CopiedItemVersions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D086B922B9461E8004939CD /* CopiedItemVersions.swift */; };
 		1D086B972B9483F0004939CD /* CopiedItemListRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D086B962B9483F0004939CD /* CopiedItemListRow.swift */; };
 		1D086B992B95340F004939CD /* SwiftUIX in Frameworks */ = {isa = PBXBuildFile; productRef = 1D086B982B95340F004939CD /* SwiftUIX */; };
@@ -88,6 +91,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1D06AA192BC34F60008C8E05 /* BoardVersions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardVersions.swift; sourceTree = "<group>"; };
+		1D06AA1B2BC363EA008C8E05 /* Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
+		1D06AA1D2BC37ACE008C8E05 /* ClipListFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipListFeature.swift; sourceTree = "<group>"; };
 		1D086B922B9461E8004939CD /* CopiedItemVersions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopiedItemVersions.swift; sourceTree = "<group>"; };
 		1D086B962B9483F0004939CD /* CopiedItemListRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopiedItemListRow.swift; sourceTree = "<group>"; };
 		1D4BCFD62B1AD79C00E10186 /* AppDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDetails.swift; sourceTree = "<group>"; };
@@ -166,6 +172,7 @@
 			isa = PBXGroup;
 			children = (
 				1D086B922B9461E8004939CD /* CopiedItemVersions.swift */,
+				1D06AA192BC34F60008C8E05 /* BoardVersions.swift */,
 			);
 			path = Migrations;
 			sourceTree = "<group>";
@@ -213,6 +220,7 @@
 				1DBB16BD2BB9CB99005893E9 /* ClipEditorFeature.swift */,
 				1DAB74E52BB9B7C6003A591F /* AppContainerFeature.swift */,
 				1DBB16C02BBBCA9F005893E9 /* BoardListFeature.swift */,
+				1D06AA1D2BC37ACE008C8E05 /* ClipListFeature.swift */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -277,10 +285,11 @@
 				1DBC765E2B20BAB2004B1261 /* PBManager.swift */,
 				1DF36DD62B16EDC80037FA6A /* CopiedEditorView.swift */,
 				1DFE67922B13168E000E36DA /* Assets.xcassets */,
-				1DFE67942B13168E000E36DA /* Preview Content */,
 				1D8346852B1415AB004ACF46 /* CopiedItem.swift */,
 				1D4BCFD62B1AD79C00E10186 /* AppDetails.swift */,
 				1DAB74C32BB8C81B003A591F /* Toolbox.swift */,
+				1DFE67942B13168E000E36DA /* Preview Content */,
+				1D06AA1B2BC363EA008C8E05 /* Logging.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -509,7 +518,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1D06AA1E2BC37ACE008C8E05 /* ClipListFeature.swift in Sources */,
 				1D4BCFD72B1AD79C00E10186 /* AppDetails.swift in Sources */,
+				1D06AA1C2BC363EA008C8E05 /* Logging.swift in Sources */,
 				1DF36DD72B16EDC80037FA6A /* CopiedEditorView.swift in Sources */,
 				1D8346862B1415AB004ACF46 /* CopiedItem.swift in Sources */,
 				1D086B972B9483F0004939CD /* CopiedItemListRow.swift in Sources */,
@@ -518,6 +529,7 @@
 				1DAB74E62BB9B7C6003A591F /* AppContainerFeature.swift in Sources */,
 				1DBB16BE2BB9CB99005893E9 /* ClipEditorFeature.swift in Sources */,
 				1DBC765F2B20BAB2004B1261 /* PBManager.swift in Sources */,
+				1D06AA1A2BC34F60008C8E05 /* BoardVersions.swift in Sources */,
 				1DBB16C12BBBCA9F005893E9 /* BoardListFeature.swift in Sources */,
 				1DFE678D2B13168D000E36DA /* Transcopied.swift in Sources */,
 				1DBB16C42BBC288A005893E9 /* Database.swift in Sources */,

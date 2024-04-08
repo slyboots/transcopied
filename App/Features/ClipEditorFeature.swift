@@ -58,9 +58,6 @@ struct ClipEditorView: View {
 
     var body: some View {
         VStack {
-            Text("Text")
-                .font(.title2)
-                .padding(.top)
             TextField(text: .constant("Placeholder"), label: { EmptyView() })
                 .font(.title2)
 //                .focused(EditorFocused.title, equals: .title)

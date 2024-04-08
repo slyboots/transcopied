@@ -15,8 +15,9 @@ import SwiftUI
 struct AppContainerFeature {
     @ObservableState
     struct State: Equatable {
-//        var pbm: PBManager = PBManager()
-        var modelContainer: ModelContext? = nil
+        var sidebar = BoardListFeature.State()
+        var content = ClipListFeature.State()
+
         var navFocus: NavigationSplitViewColumn = .content
         var settingsShown: Bool = false
         var boards: [String] = []
@@ -27,6 +28,8 @@ struct AppContainerFeature {
 
     enum Action: Equatable {
         case sceneActivated
+        case sidebar(BoardListFeature.Action)
+        case content(ClipListFeature.Action)
         case appeared
         case navShow(NavigationSplitViewColumn)
         case boardListRowTapped(String)
@@ -34,28 +37,31 @@ struct AppContainerFeature {
         case none
     }
 
-    var body: some ReducerOf<Self> {
+    var body: some ReducerOf<AppContainerFeature> {
+        Scope<AppContainerFeature.State, AppContainerFeature.Action, BoardListFeature>(state: \.sidebar, action: \.sidebar, child: {BoardListFeature()})
+        Scope<AppContainerFeature.State, AppContainerFeature.Action, ClipListFeature>(state: \.content, action: \.content, child: {ClipListFeature()})
         Reduce { state, action in
-            switch action {
-                case .sceneActivated:
-//                    Toolbox.saveClipboard(pbm: state.pbm, modelContext: state.modelContainer!)
-                    return .none
-                case .appeared:
-//                    Toolbox.saveClipboard(pbm: state.pbm, modelContext: state.modelContainer!)
-                    return .none
-                case .navShow(let focused):
-                    state.navFocus = focused
-                    return .none
-                case .toggleSettingsTapped:
-                    state.settingsShown = !state.settingsShown
-                    return .none
-                case .boardListRowTapped(let board):
-                    state.navFocus = .content
-                    state.selectedBoard = board
-                    return .none
-                case .none:
-                    return .none
-            }
+            return .none
+//            switch action {
+//                case .sceneActivated:
+////                    Toolbox.saveClipboard(pbm: state.pbm, modelContext: state.modelContainer!)
+//                    return .none
+//                case .appeared:
+////                    Toolbox.saveClipboard(pbm: state.pbm, modelContext: state.modelContainer!)
+//                    return .none
+//                case .navShow(let focused):
+//                    state.navFocus = focused
+//                    return .none
+//                case .toggleSettingsTapped:
+//                    state.settingsShown = !state.settingsShown
+//                    return .none
+//                case .boardListRowTapped(let board):
+//                    state.navFocus = .content
+//                    state.selectedBoard = board
+//                    return .none
+//                case .none:
+//                    return .none
+//            }
         }
     }
 }
@@ -68,28 +74,9 @@ struct AppContainerView: View {
     var body: some View {
         WithViewStore(store, observe:{ $0 }) { viewStore in
             NavigationSplitView(preferredCompactColumn: viewStore.binding(get: \.navFocus, send: { .navShow($0) })) {
-                List() {
-                    ForEach(enumerating: viewStore.state.boards) { board in
-                        LabeledContent {
-                            Text(">")
-                        } label: {
-                            Label(board, systemImage: "clipboard")
-                        }
-                        .onTapGesture {
-                            viewStore.send(.boardListRowTapped(board))
-                        }
-                    }
-                }
-                .listStyle(.inset)
+                BoardListView(store: store.scope(state: \.sidebar, action: \.sidebar))
             } content: {
-                VStack {
-                    Text("Content")
-                    List {
-                        ForEach(enumerating: store.state.clips) { clip in
-                            Text(clip)
-                        }
-                    }
-                }
+                ClipListView(store: store.scope(state: \.content, action: \.content))
             } detail: {
                 VStack {
                     Text("Details")

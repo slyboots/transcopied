@@ -9,6 +9,17 @@ import Dependencies
 import Foundation
 import SwiftData
 
+
+enum DatabaseMigrationPlan: SchemaMigrationPlan {
+    static var schemas: [any VersionedSchema.Type] {
+        BoardMigrationPlan.schemas+CopiedItemsMigrationPlan.schemas
+    }
+
+    static var stages: [MigrationStage] {
+        BoardMigrationPlan.stages+CopiedItemsMigrationPlan.stages
+    }
+}
+
 extension DependencyValues {
     var databaseService: Database {
         get { self[Database.self] }
@@ -25,7 +36,7 @@ fileprivate let previewContext: ModelContext = {
 }()
 
 fileprivate let liveContainer: ModelContainer = {
-    let schema = Schema([ CopiedItem.self ])
+    let schema = Schema([ CopiedItem.self, Board.self ])
 #if DEBUG
     let cloudkitDB = ModelConfiguration.CloudKitDatabase.private("iCloud.transcopied.dev.1")
 #else
@@ -33,22 +44,22 @@ fileprivate let liveContainer: ModelContainer = {
 #endif
     let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false, allowsSave: true, cloudKitDatabase: cloudkitDB)
     do {
-        return try ModelContainer(for: schema, configurations: [config])
-        // migrationPlan: CopiedItemsMigrationPlan.self,
+        return try ModelContainer(for: schema, migrationPlan: DatabaseMigrationPlan.self, configurations: [config])
     }
     catch {
+        
         fatalError("Could not create ModelContainer: \(error)")
     }
 }()
 
 private let previewContainer: ModelContainer = {
-    let schema = Schema([ CopiedItem.self ])
+    let schema = Schema([ CopiedItem.self, Board.self ])
     let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, allowsSave: true)
     do {
         return try ModelContainer(for: schema, configurations: [config])
-        // migrationPlan: CopiedItemsMigrationPlan.self,
     }
     catch {
+        LOG.error("\(error)")
         fatalError("Could not create ModelContainer: \(error)")
     }
 }()

@@ -61,4 +61,24 @@ enum BoardMigrationPlan: SchemaMigrationPlan {
         fromVersion: BoardSchemaV1.self,
         toVersion: BoardSchemaV2.self
     )
+
+    static let Board__V2__CreateDefault = MigrationStage.custom(
+        fromVersion: BoardSchemaV2.self,
+        toVersion: BoardSchemaV2.self,
+        willMigrate: nil,
+        didMigrate: { ctx in
+            let boardName = #Predicate<Board> { $0.name == "Copied" }
+            do {
+                try ctx.transaction {
+                    var defaultBoardDescriptor = FetchDescriptor<Board>(predicate: boardName)
+                    defaultBoardDescriptor.propertiesToFetch = [\.name]
+                    let defaultCreated = try ctx.fetchCount(defaultBoardDescriptor) > 0
+                    if !defaultCreated {
+                        ctx.insert(Board(name: "Copied"))
+                    }
+                }
+            } catch {
+                print("Error Fetching Count: \(error)")
+            }
+        })
 }

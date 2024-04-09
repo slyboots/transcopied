@@ -12,24 +12,24 @@ import SwiftUI
 
 
 @Reducer
-struct AppContainerFeature {
+struct AppContainer {
     @ObservableState
     struct State: Equatable {
-        var sidebar = BoardListFeature.State()
-        var content = ClipListFeature.State()
+        var sidebar = BoardList.State()
+        var content = ClipList.State()
 
         var navFocus: NavigationSplitViewColumn = .content
         var settingsShown: Bool = false
         var boards: [String] = []
         var clips: [String] = []
         var selectedBoard: String? = nil
-        var selectedClip: CopiedItem? = nil
+//        var selectedClip: CopiedItem? = nil
     }
 
     enum Action: Equatable {
         case sceneActivated
-        case sidebar(BoardListFeature.Action)
-        case content(ClipListFeature.Action)
+        case sidebar(BoardList.Action)
+        case content(ClipList.Action)
         case appeared
         case navShow(NavigationSplitViewColumn)
         case boardListRowTapped(String)
@@ -37,9 +37,9 @@ struct AppContainerFeature {
         case none
     }
 
-    var body: some ReducerOf<AppContainerFeature> {
-        Scope<AppContainerFeature.State, AppContainerFeature.Action, BoardListFeature>(state: \.sidebar, action: \.sidebar, child: {BoardListFeature()})
-        Scope<AppContainerFeature.State, AppContainerFeature.Action, ClipListFeature>(state: \.content, action: \.content, child: {ClipListFeature()})
+    var body: some ReducerOf<AppContainer> {
+        Scope<AppContainer.State, AppContainer.Action, BoardList>(state: \.sidebar, action: \.sidebar, child: {BoardList()})
+        Scope<AppContainer.State, AppContainer.Action, ClipList>(state: \.content, action: \.content, child: {ClipList()})
         Reduce { state, action in
             return .none
 //            switch action {
@@ -69,7 +69,7 @@ struct AppContainerFeature {
 // Just a container for the 3 column
 // navigation split view used by the app
 struct AppContainerView: View {
-    let store: StoreOf<AppContainerFeature>
+    let store: StoreOf<AppContainer>
 
     var body: some View {
         WithViewStore(store, observe:{ $0 }) { viewStore in
@@ -88,16 +88,16 @@ struct AppContainerView: View {
 
 #Preview("Vertical") {
     AppContainerView(
-        store: Store(initialState: AppContainerFeature.State(boards:["Clips"], clips: ["Clip 1", "Test", "DATA"])) {
-            AppContainerFeature()
+        store: Store(initialState: AppContainer.State(boards:["Clips"], clips: ["Clip 1", "Test", "DATA"])) {
+            AppContainer()
         }
     )
 }
 
 #Preview("Horizontal", traits: .landscapeRight) {
     AppContainerView(
-        store: Store(initialState: AppContainerFeature.State(boards:["Clips"], clips: ["Clip 1", "Test", "DATA"])) {
-            AppContainerFeature()
+        store: Store(initialState: AppContainer.State(boards:["Clips"], clips: ["Clip 1", "Test", "DATA"])) {
+            AppContainer()
         }
     )
 }

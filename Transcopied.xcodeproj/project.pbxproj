@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		1D06AA1A2BC34F60008C8E05 /* BoardVersions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D06AA192BC34F60008C8E05 /* BoardVersions.swift */; };
 		1D06AA1C2BC363EA008C8E05 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D06AA1B2BC363EA008C8E05 /* Logging.swift */; };
-		1D06AA1E2BC37ACE008C8E05 /* ClipListFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D06AA1D2BC37ACE008C8E05 /* ClipListFeature.swift */; };
+		1D06AA1E2BC37ACE008C8E05 /* ClipList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D06AA1D2BC37ACE008C8E05 /* ClipList.swift */; };
 		1D086B932B9461E8004939CD /* CopiedItemVersions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D086B922B9461E8004939CD /* CopiedItemVersions.swift */; };
 		1D086B972B9483F0004939CD /* CopiedItemListRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D086B962B9483F0004939CD /* CopiedItemListRow.swift */; };
 		1D086B992B95340F004939CD /* SwiftUIX in Frameworks */ = {isa = PBXBuildFile; productRef = 1D086B982B95340F004939CD /* SwiftUIX */; };
@@ -28,9 +28,9 @@
 		1DAB74CC2BB8EC2E003A591F /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DAB74CB2BB8EC2E003A591F /* KeyboardViewController.swift */; };
 		1DAB74D02BB8EC2E003A591F /* keeb.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1DAB74C92BB8EC2E003A591F /* keeb.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		1DAB74D62BB978E6003A591F /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 1DAB74D52BB978E6003A591F /* ComposableArchitecture */; };
-		1DAB74E62BB9B7C6003A591F /* AppContainerFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DAB74E52BB9B7C6003A591F /* AppContainerFeature.swift */; };
+		1DAB74E62BB9B7C6003A591F /* AppContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DAB74E52BB9B7C6003A591F /* AppContainer.swift */; };
 		1DBB16BE2BB9CB99005893E9 /* ClipEditorFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DBB16BD2BB9CB99005893E9 /* ClipEditorFeature.swift */; };
-		1DBB16C12BBBCA9F005893E9 /* BoardListFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DBB16C02BBBCA9F005893E9 /* BoardListFeature.swift */; };
+		1DBB16C12BBBCA9F005893E9 /* BoardList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DBB16C02BBBCA9F005893E9 /* BoardList.swift */; };
 		1DBB16C42BBC288A005893E9 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DBB16C32BBC288A005893E9 /* Database.swift */; };
 		1DBC765B2B1F5FA6004B1261 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1DFE67922B13168E000E36DA /* Assets.xcassets */; };
 		1DBC765F2B20BAB2004B1261 /* PBManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DBC765E2B20BAB2004B1261 /* PBManager.swift */; };
@@ -93,7 +93,7 @@
 /* Begin PBXFileReference section */
 		1D06AA192BC34F60008C8E05 /* BoardVersions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardVersions.swift; sourceTree = "<group>"; };
 		1D06AA1B2BC363EA008C8E05 /* Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
-		1D06AA1D2BC37ACE008C8E05 /* ClipListFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipListFeature.swift; sourceTree = "<group>"; };
+		1D06AA1D2BC37ACE008C8E05 /* ClipList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipList.swift; sourceTree = "<group>"; };
 		1D086B922B9461E8004939CD /* CopiedItemVersions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopiedItemVersions.swift; sourceTree = "<group>"; };
 		1D086B962B9483F0004939CD /* CopiedItemListRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopiedItemListRow.swift; sourceTree = "<group>"; };
 		1D4BCFD62B1AD79C00E10186 /* AppDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDetails.swift; sourceTree = "<group>"; };
@@ -110,9 +110,9 @@
 		1DAB74C92BB8EC2E003A591F /* keeb.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = keeb.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DAB74CB2BB8EC2E003A591F /* KeyboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardViewController.swift; sourceTree = "<group>"; };
 		1DAB74CD2BB8EC2E003A591F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1DAB74E52BB9B7C6003A591F /* AppContainerFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppContainerFeature.swift; path = App/Features/AppContainerFeature.swift; sourceTree = SOURCE_ROOT; };
+		1DAB74E52BB9B7C6003A591F /* AppContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppContainer.swift; path = App/Features/AppContainer.swift; sourceTree = SOURCE_ROOT; };
 		1DBB16BD2BB9CB99005893E9 /* ClipEditorFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ClipEditorFeature.swift; path = App/Features/ClipEditorFeature.swift; sourceTree = SOURCE_ROOT; };
-		1DBB16C02BBBCA9F005893E9 /* BoardListFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardListFeature.swift; sourceTree = "<group>"; };
+		1DBB16C02BBBCA9F005893E9 /* BoardList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardList.swift; sourceTree = "<group>"; };
 		1DBB16C32BBC288A005893E9 /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		1DBC765D2B20040B004B1261 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		1DBC765E2B20BAB2004B1261 /* PBManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PBManager.swift; sourceTree = "<group>"; };
@@ -218,9 +218,9 @@
 			isa = PBXGroup;
 			children = (
 				1DBB16BD2BB9CB99005893E9 /* ClipEditorFeature.swift */,
-				1DAB74E52BB9B7C6003A591F /* AppContainerFeature.swift */,
-				1DBB16C02BBBCA9F005893E9 /* BoardListFeature.swift */,
-				1D06AA1D2BC37ACE008C8E05 /* ClipListFeature.swift */,
+				1DAB74E52BB9B7C6003A591F /* AppContainer.swift */,
+				1DBB16C02BBBCA9F005893E9 /* BoardList.swift */,
+				1D06AA1D2BC37ACE008C8E05 /* ClipList.swift */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -518,7 +518,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1D06AA1E2BC37ACE008C8E05 /* ClipListFeature.swift in Sources */,
+				1D06AA1E2BC37ACE008C8E05 /* ClipList.swift in Sources */,
 				1D4BCFD72B1AD79C00E10186 /* AppDetails.swift in Sources */,
 				1D06AA1C2BC363EA008C8E05 /* Logging.swift in Sources */,
 				1DF36DD72B16EDC80037FA6A /* CopiedEditorView.swift in Sources */,
@@ -526,11 +526,11 @@
 				1D086B972B9483F0004939CD /* CopiedItemListRow.swift in Sources */,
 				1D95123D2BA1AFA7009AD8B6 /* CopiedItemList.swift in Sources */,
 				1D086B932B9461E8004939CD /* CopiedItemVersions.swift in Sources */,
-				1DAB74E62BB9B7C6003A591F /* AppContainerFeature.swift in Sources */,
+				1DAB74E62BB9B7C6003A591F /* AppContainer.swift in Sources */,
 				1DBB16BE2BB9CB99005893E9 /* ClipEditorFeature.swift in Sources */,
 				1DBC765F2B20BAB2004B1261 /* PBManager.swift in Sources */,
 				1D06AA1A2BC34F60008C8E05 /* BoardVersions.swift in Sources */,
-				1DBB16C12BBBCA9F005893E9 /* BoardListFeature.swift in Sources */,
+				1DBB16C12BBBCA9F005893E9 /* BoardList.swift in Sources */,
 				1DFE678D2B13168D000E36DA /* Transcopied.swift in Sources */,
 				1DBB16C42BBC288A005893E9 /* Database.swift in Sources */,
 				1DAB74C42BB8C81B003A591F /* Toolbox.swift in Sources */,

@@ -56,7 +56,7 @@ private let previewContainer: ModelContainer = {
     let schema = Schema([ CopiedItem.self, Board.self ])
     let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, allowsSave: true)
     do {
-        return try ModelContainer(for: schema, configurations: [config])
+        return try ModelContainer(for: schema, migrationPlan: DatabaseMigrationPlan.self, configurations: [config])
     }
     catch {
         LOG.error("\(error)")

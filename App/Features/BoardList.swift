@@ -5,13 +5,12 @@
 //  Created by Dakota Lorance on 4/2/24.
 //
 
-import Foundation
 import ComposableArchitecture
+import Foundation
 import SwiftUI
 
-
 @Reducer
-struct BoardListFeature {
+struct BoardList {
     @ObservableState
     struct State: Equatable {
         var boards: [String] = []
@@ -19,13 +18,16 @@ struct BoardListFeature {
     }
 
     enum Action: Equatable {
+        case addButtonTapped
         case boardTapped(String)
     }
 
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
-                case .boardTapped(let board):
+                case .addButtonTapped:
+                    return .none
+                case let .boardTapped(board):
                     state.selectedBoard = board
                     return .none
             }
@@ -34,12 +36,12 @@ struct BoardListFeature {
 }
 
 struct BoardListView: View {
-    let store: StoreOf<BoardListFeature>
+    let store: StoreOf<BoardList>
 
     var body: some View {
-        List() {
+        List {
             Section {
-                LabeledContent {Text("0").tint(.secondary)} label: {
+                LabeledContent { Text("0").tint(.secondary) } label: {
                     Label("Copied", systemImage: "clipboard")
                 }
                 .listRowSeparator(.hidden)
@@ -57,13 +59,13 @@ struct BoardListView: View {
                     }
                     .listRowSeparator(.hidden)
                 }
-                .listSectionSeparator(/*@START_MENU_TOKEN@*/.visible/*@END_MENU_TOKEN@*/)
+                .listSectionSeparator(/*@START_MENU_TOKEN@*/ .visible/*@END_MENU_TOKEN@*/)
             }
             Section {
-                LabeledContent {EmptyView()} label: {
+                LabeledContent { EmptyView() } label: {
                     Label("Trash", systemImage: "trash").foregroundStyle(.red)
                 }
-                LabeledContent {EmptyView()} label: {
+                LabeledContent { EmptyView() } label: {
                     Label("Settings", systemImage: "slider.horizontal.3")
                 }
                 .listSectionSpacing(.compact)
@@ -72,6 +74,8 @@ struct BoardListView: View {
         }
         .listSectionSpacing(ListSectionSpacing.custom(20.0))
         .listStyle(.plain)
+        .navigationTitle("Boards")
+        .navigationBarTitleDisplayMode(.inline)
 //        WithViewStore(store, observe: {$0}) {viewStore in
 //            List() {
 //                ForEach(enumerating: viewStore.state.boards) { board in
@@ -92,14 +96,22 @@ struct BoardListView: View {
 
 #Preview {
     @Dependency(\.databaseService) var databaseService
-    return BoardListView(
-        store: Store(
-            initialState: BoardListFeature.State(
-                boards: ["Clips"],
-                selectedBoard: "Clips"
-            )) {
-            BoardListFeature()
-        }
+    return NavigationSplitView(
+        preferredCompactColumn: .constant(.sidebar),
+        sidebar: {
+            BoardListView(
+                store: Store(
+                    initialState: BoardList.State(
+                        boards: ["Clips"],
+                        selectedBoard: "Clips"
+                    )
+                ) {
+                    BoardList()
+                }
+            )
+        },
+        detail: { EmptyView() }
     )
+
     .modelContainer(databaseService.container())
 }

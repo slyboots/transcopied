@@ -19,8 +19,8 @@ struct Transcopied: App {
 
     var body: some Scene {
         WindowGroup {
-            AppContainerView(store: .init(initialState: AppContainerFeature.State(), reducer: {
-                AppContainerFeature()
+            AppContainerView(store: .init(initialState: AppContainer.State(), reducer: {
+                AppContainer()
                     ._printChanges()
             }))
             // ClipEditorView(store: .init(initialState: ClipEditorFeature.State(), reducer: {ClipEditorFeature()._printChanges()}
@@ -55,8 +55,8 @@ struct Transcopied: App {
     Group {
         @Dependency(\.databaseService) var databaseService
         let container = databaseService.container()
-        AppContainerView(store: .init(initialState: AppContainerFeature.State(), reducer: {
-                AppContainerFeature()
+        AppContainerView(store: .init(initialState: AppContainer.State(), reducer: {
+                AppContainer()
                     ._printChanges()
         }))
         .modelContainer(container)
